@@ -92,17 +92,17 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/profile?tab=akun')}>
                 <IconUserCircle />
-                Account
+                Profil Akun
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/profile?tab=billing')}>
                 <IconCreditCard />
-                Billing
+                Detail Penagihan
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/profile?tab=notifikasi')}>
                 <IconNotification />
-                Notifications
+                Preferensi Notifikasi
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

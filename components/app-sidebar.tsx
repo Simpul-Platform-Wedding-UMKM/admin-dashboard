@@ -13,6 +13,8 @@ import {
   IconUsers,
   IconSettings,
   IconHelp,
+  IconMap,
+  IconUserCheck,
 } from "@tabler/icons-react"
 
 import { NavMain } from '@/components/nav-main'
@@ -36,59 +38,69 @@ const data = {
   },
   navMain: [
     {
-      title: "Overview",
+      title: "Ikhtisar",
       url: "/dashboard",
       icon: IconDashboard,
     },
     {
-      title: "Vendor Management",
+      title: "Verifikasi KYB",
+      url: "/kyb",
+      icon: IconUserCheck,
+    },
+    {
+      title: "Manajemen Vendor",
       url: "/vendors",
       icon: IconBriefcase,
     },
     {
-      title: "Transactions & Splits",
+      title: "Transaksi & Bagi Hasil",
       url: "/transactions",
       icon: IconCreditCard,
     },
     {
-      title: "Dispute Resolution",
+      title: "Peta Panas QRIS",
+      url: "/qris-heatmap",
+      icon: IconMap,
+    },
+    {
+      title: "Resolusi Sengketa",
       url: "/disputes",
       icon: IconAlertCircle,
     },
     {
-      title: "Revenue & Financial",
-      url: "/revenue",
+      title: "Audit Pendapatan",
+      url: "/revenue/audit",
       icon: IconTrendingUp,
     },
     {
-      title: "Risk & Compliance",
+      title: "Risiko & Kepatuhan",
       url: "/compliance",
       icon: IconShield,
     },
     {
-      title: "AI Analytics",
+      title: "Analisis AI",
       url: "/ai-analytics",
       icon: IconBrain,
     },
     {
-      title: "Marketing & Featured",
+      title: "Pemasaran & Unggulan",
       url: "/marketing",
       icon: IconStar,
     },
     {
-      title: "User & Role Mgmt",
+      title: "Manajemen Pengguna & Peran",
       url: "/user-management",
       icon: IconUsers,
     },
     {
-      title: "Settings",
+      title: "Pengaturan",
       url: "/settings",
       icon: IconSettings,
     },
   ],
   navSecondary: [
     {
-      title: "Help & Support",
+      title: "Bantuan & Dukungan",
       url: "/help",
       icon: IconHelp,
     },

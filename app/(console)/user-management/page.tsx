@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { Edit, Trash2, Plus, AlertCircle } from 'lucide-react'
+import { Edit, Trash2, Plus, AlertCircle, ShieldCheck } from 'lucide-react'
 
 export default function UserRoleManagementPage() {
   const [users, setUsers] = useState<SystemUser[]>([])
@@ -41,22 +41,32 @@ export default function UserRoleManagementPage() {
     return colors[role] || 'bg-surface-container text-on-surface'
   }
 
+  const getRoleLabel = (role: string) => {
+    const labels: Record<string, string> = {
+      'SUPER_ADMIN': 'Super Admin',
+      'ADMIN': 'Admin Verifikator',
+      'MODERATOR': 'Moderator Sengketa',
+      'ANALYST': 'Analis Platform'
+    }
+    return labels[role] || role
+  }
+
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
-      <div className="flex items-center justify-between">
+    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-sm">
         <div>
-          <h1 className="font-heading text-headline-lg text-on-surface">User & Role Management</h1>
-          <p className="text-body-md text-on-surface-variant">Manage admin accounts, permissions, and access roles</p>
+          <h1 className="font-heading text-headline-lg text-on-surface font-bold">Manajemen Pengguna & Peran</h1>
+          <p className="text-body-md text-on-surface-variant">Kelola akun admin internal, izin akses keamanan, dan otorisasi peran.</p>
         </div>
-        <button className="px-md py-sm bg-primary text-on-primary rounded-md font-semibold text-label-md hover:opacity-90 transition-opacity flex items-center gap-xs">
+        <button className="px-md py-sm bg-primary text-on-primary rounded-md font-semibold text-label-md hover:opacity-90 transition-opacity flex items-center gap-xs w-full sm:w-auto justify-center">
           <Plus className="w-4 h-4" />
-          Add User
+          Tambah Pengguna
         </button>
       </div>
 
       {/* Role Summary */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-md">
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i} className="p-md bg-surface-container-lowest border border-outline-variant">
               <Skeleton className="h-4 w-20 mb-xs" />
@@ -65,22 +75,22 @@ export default function UserRoleManagementPage() {
           ))}
         </div>
       ) : error ? null : (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-md">
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-            <p className="text-label-sm text-on-surface-variant mb-xs">Total Users</p>
-            <p className="text-headline-lg text-on-surface font-semibold">{users.length}</p>
+            <p className="text-label-sm text-on-surface-variant mb-xs">Total Pengguna</p>
+            <p className="text-headline-lg text-on-surface font-bold">{users.length}</p>
           </Card>
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
             <p className="text-label-sm text-on-surface-variant mb-xs">Super Admin</p>
-            <p className="text-headline-lg text-error font-semibold">{users.filter(u => u.role === 'SUPER_ADMIN').length}</p>
+            <p className="text-headline-lg text-error font-bold">{users.filter(u => u.role === 'SUPER_ADMIN').length}</p>
           </Card>
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-            <p className="text-label-sm text-on-surface-variant mb-xs">Moderators</p>
-            <p className="text-headline-lg text-tertiary-container font-semibold">{users.filter(u => u.role === 'MODERATOR').length}</p>
+            <p className="text-label-sm text-on-surface-variant mb-xs">Moderator</p>
+            <p className="text-headline-lg text-tertiary font-bold">{users.filter(u => u.role === 'MODERATOR').length}</p>
           </Card>
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-            <p className="text-label-sm text-on-surface-variant mb-xs">Analysts</p>
-            <p className="text-headline-lg text-on-surface font-semibold">{users.filter(u => u.role === 'ANALYST').length}</p>
+            <p className="text-label-sm text-on-surface-variant mb-xs">Analis</p>
+            <p className="text-headline-lg text-on-surface font-bold">{users.filter(u => u.role === 'ANALYST').length}</p>
           </Card>
         </div>
       )}
@@ -98,22 +108,22 @@ export default function UserRoleManagementPage() {
 
       {/* Users Table */}
       <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-        <h2 className="text-headline-md text-on-surface font-semibold mb-md">System Users</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <h2 className="text-headline-md text-on-surface font-semibold mb-md">Daftar Pengguna Sistem</h2>
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b border-outline-variant">
-                <th className="sticky left-0 z-10 bg-surface-container-lowest text-left p-md text-label-md text-on-surface font-semibold">Name</th>
+                <th className="sticky left-0 z-10 bg-surface-container-lowest text-left p-md text-label-md text-on-surface font-semibold">Nama Lengkap</th>
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Email</th>
-                <th className="text-left p-md text-label-md text-on-surface font-semibold">Role</th>
+                <th className="text-left p-md text-label-md text-on-surface font-semibold">Peran Akses</th>
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Status</th>
-                <th className="text-left p-md text-label-md text-on-surface font-semibold">Last Login</th>
-                <th className="text-center p-md text-label-md text-on-surface font-semibold">Actions</th>
+                <th className="text-left p-md text-label-md text-on-surface font-semibold">Login Terakhir</th>
+                <th className="text-center p-md text-label-md text-on-surface font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                Array.from({ length: 5 }).map((_, i) => (
+                Array.from({ length: 4 }).map((_, i) => (
                   <tr key={i} className="border-b border-outline-variant">
                     <td className="p-md"><Skeleton className="h-5 w-32" /></td>
                     <td className="p-md"><Skeleton className="h-5 w-44" /></td>
@@ -127,26 +137,26 @@ export default function UserRoleManagementPage() {
                 users.map((user) => (
                   <tr key={user.id} className="group border-b border-outline-variant hover:bg-surface-container transition-colors">
                     <td className="sticky left-0 z-10 bg-surface-container-lowest group-hover:bg-surface-container p-md text-body-md text-on-surface font-medium">{user.name}</td>
-                    <td className="p-md text-body-md text-on-surface-variant">{user.email}</td>
+                    <td className="p-md text-body-md text-on-surface-variant font-mono text-xs">{user.email}</td>
                     <td className="p-md">
                       <Badge className={getRoleColor(user.role)}>
-                        {user.role.replace(/_/g, ' ')}
+                        {getRoleLabel(user.role)}
                       </Badge>
                     </td>
                     <td className="p-md">
-                      <Badge className={user.isActive ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-surface-container text-on-surface'}>
-                        {user.isActive ? 'Active' : 'Inactive'}
+                      <Badge className={user.isActive ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-surface-container text-on-surface-variant'}>
+                        {user.isActive ? 'Aktif' : 'Nonaktif'}
                       </Badge>
                     </td>
                     <td className="p-md text-body-sm text-on-surface-variant">
-                      {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString('id-ID') : 'Never'}
+                      {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Belum Pernah'}
                     </td>
                     <td className="p-md text-center">
                       <div className="flex items-center justify-center gap-xs">
                         <button className="p-xs hover:bg-surface-container rounded transition-colors" title="Edit">
                           <Edit className="w-4 h-4 text-primary" />
                         </button>
-                        <button className="p-xs hover:bg-surface-container rounded transition-colors" title="Delete">
+                        <button className="p-xs hover:bg-surface-container rounded transition-colors" title="Hapus">
                           <Trash2 className="w-4 h-4 text-error" />
                         </button>
                       </div>
@@ -161,21 +171,25 @@ export default function UserRoleManagementPage() {
 
       {/* Roles & Permissions */}
       <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-        <h2 className="text-headline-md text-on-surface font-semibold mb-md">Roles & Permissions</h2>
-        <div className="space-y-md">
+        <h2 className="text-headline-md text-on-surface font-semibold mb-md flex items-center gap-xs">
+          <ShieldCheck className="h-5 w-5 text-primary" /> Detail Otorisasi Hak Akses Peran
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {[
-            { role: 'SUPER_ADMIN', perms: ['All permissions', 'System administration', 'User management', 'Full audit access'] },
-            { role: 'ADMIN', perms: ['Vendor management', 'Dispute resolution', 'Report access', 'Limited user management'] },
-            { role: 'MODERATOR', perms: ['Dispute resolution', 'Vendor monitoring', 'View reports', 'No user management'] },
-            { role: 'ANALYST', perms: ['View analytics', 'Export data', 'View reports', 'No admin functions'] },
+            { role: 'SUPER_ADMIN', perms: ['Semua izin platform', 'Administrasi sistem penuh', 'Manajemen akun admin', 'Akses penuh catatan audit'] },
+            { role: 'ADMIN', perms: ['Manajemen verifikasi vendor', 'Penyelesaian dispute sengketa', 'Akses laporan keuangan', 'Manajemen akun admin terbatas'] },
+            { role: 'MODERATOR', perms: ['Penyelesaian dispute sengketa', 'Pemantauan aktivitas vendor', 'Melihat daftar laporan', 'Tanpa manajemen akun admin'] },
+            { role: 'ANALYST', perms: ['Melihat analisis performa', 'Ekspor data mentah', 'Melihat laporan platform', 'Tanpa fungsi administratif'] },
           ].map((item) => (
             <div key={item.role} className="p-md bg-surface-container rounded-md border border-outline-variant">
-              <Badge className={getRoleColor(item.role)} style={{ marginBottom: '8px' }}>
-                {item.role.replace(/_/g, ' ')}
+              <Badge className={`${getRoleColor(item.role)} mb-sm`}>
+                {getRoleLabel(item.role)}
               </Badge>
-              <div className="grid grid-cols-2 gap-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-xs">
                 {item.perms.map((perm) => (
-                  <p key={perm} className="text-body-sm text-on-surface-variant">• {perm}</p>
+                  <p key={perm} className="text-body-sm text-on-surface-variant flex items-center gap-xs">
+                    <span className="h-1.5 w-1.5 bg-primary rounded-full shrink-0"></span> {perm}
+                  </p>
                 ))}
               </div>
             </div>

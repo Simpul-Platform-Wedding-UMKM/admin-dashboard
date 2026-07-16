@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { getDisputes } from '@/lib/services/dispute'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -140,11 +141,13 @@ export default function DisputeResolutionPage() {
             <h3 className="text-headline-sm text-on-surface font-semibold mb-md">{status.replace(/_/g, ' ')}</h3>
             <div className="space-y-md">
               {disputes.filter(d => d.status === status).map((dispute) => (
-                <Card key={dispute.id} className="p-md bg-surface-container border-l-4 border-l-primary hover:shadow-elevated transition-shadow cursor-pointer">
-                  <p className="text-label-md text-on-surface font-semibold mb-xs">ID: {dispute.id}</p>
-                  <p className="text-body-sm text-on-surface-variant mb-sm">{dispute.reason}</p>
-                  <Badge className="bg-primary text-on-primary">{dispute.status}</Badge>
-                </Card>
+                <Link href={`/disputes/${dispute.id}`} key={dispute.id} className="block transition-transform hover:scale-[1.02]">
+                  <Card className="p-md bg-surface-container border-l-4 border-l-primary hover:shadow-elevated transition-shadow cursor-pointer">
+                    <p className="text-label-md text-on-surface font-semibold mb-xs">ID: {dispute.id}</p>
+                    <p className="text-body-sm text-on-surface-variant mb-sm">{dispute.reason}</p>
+                    <Badge className="bg-primary text-on-primary">{dispute.status}</Badge>
+                  </Card>
+                </Link>
               ))}
             </div>
           </Card>
@@ -164,11 +167,13 @@ export default function DisputeResolutionPage() {
         </Tabs>
         <div className="space-y-md mt-md">
           {disputes.filter(d => d.status === activeStatus).map((dispute) => (
-            <Card key={dispute.id} className="p-md bg-surface-container-lowest border-l-4 border-l-primary">
-              <p className="text-label-md text-on-surface font-semibold mb-xs">ID: {dispute.id}</p>
-              <p className="text-body-sm text-on-surface-variant mb-sm">{dispute.reason}</p>
-              <Badge className="bg-primary text-on-primary">{dispute.status}</Badge>
-            </Card>
+            <Link href={`/disputes/${dispute.id}`} key={dispute.id} className="block">
+              <Card className="p-md bg-surface-container-lowest border-l-4 border-l-primary hover:shadow-elevated cursor-pointer transition-shadow">
+                <p className="text-label-md text-on-surface font-semibold mb-xs">ID: {dispute.id}</p>
+                <p className="text-body-sm text-on-surface-variant mb-sm">{dispute.reason}</p>
+                <Badge className="bg-primary text-on-primary">{dispute.status}</Badge>
+              </Card>
+            </Link>
           ))}
           {disputes.filter(d => d.status === activeStatus).length === 0 && (
             <p className="text-center text-body-sm text-on-surface-variant py-lg">Tidak ada dispute dengan status ini</p>
@@ -181,21 +186,23 @@ export default function DisputeResolutionPage() {
         <h2 className="text-headline-md text-on-surface font-semibold mb-md">All Disputes</h2>
         <div className="space-y-md">
           {disputes.map((dispute) => (
-            <div key={dispute.id} className="p-md bg-surface-container rounded-md border border-outline-variant hover:bg-surface-container-high transition-colors">
-              <div className="flex items-start justify-between mb-md">
-                <div>
-                  <p className="text-body-md text-on-surface font-semibold">{dispute.reason}</p>
-                  <p className="text-label-sm text-on-surface-variant">ID: {dispute.id}</p>
+            <Link href={`/disputes/${dispute.id}`} key={dispute.id} className="block transition-transform hover:scale-[1.01]">
+              <div className="p-md bg-surface-container rounded-md border border-outline-variant hover:bg-surface-container-high transition-colors cursor-pointer">
+                <div className="flex items-start justify-between mb-md">
+                  <div>
+                    <p className="text-body-md text-on-surface font-semibold">{dispute.reason}</p>
+                    <p className="text-label-sm text-on-surface-variant">ID: {dispute.id}</p>
+                  </div>
+                  <Badge className={getStatusColor(dispute.status)}>{dispute.status}</Badge>
                 </div>
-                <Badge className={getStatusColor(dispute.status)}>{dispute.status}</Badge>
+                <p className="text-body-sm text-on-surface-variant mb-md">{dispute.description}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-md text-label-sm text-on-surface-variant">
+                  <div>Buyer: {dispute.buyerId}</div>
+                  <div>Vendor: {dispute.vendorId}</div>
+                  <div>Created: {new Date(dispute.createdAt).toLocaleDateString('id-ID')}</div>
+                </div>
               </div>
-              <p className="text-body-sm text-on-surface-variant mb-md">{dispute.description}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-md text-label-sm text-on-surface-variant">
-                <div>Buyer: {dispute.buyerId}</div>
-                <div>Vendor: {dispute.vendorId}</div>
-                <div>Created: {new Date(dispute.createdAt).toLocaleDateString('id-ID')}</div>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       </Card>

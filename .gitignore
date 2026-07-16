@@ -40,3 +40,6 @@ Thumbs.db
 
 # secrets
 *.pem
+
+# agents
+.agents

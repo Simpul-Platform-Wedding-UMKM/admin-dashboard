@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { getPaymentSplits } from '@/lib/services/payment'
 import type { PaymentSplit } from '@/lib/types'
 import { Card } from '@/components/ui/card'
@@ -137,7 +138,11 @@ export default function TransactionsPage() {
             <tbody>
               {splits.map((split) => (
                 <tr key={split.id} className="group border-b border-outline-variant hover:bg-surface-container">
-                  <td className="sticky left-0 z-10 bg-surface-container-lowest group-hover:bg-surface-container p-md text-body-sm font-mono text-primary">{split.id}</td>
+                  <td className="sticky left-0 z-10 bg-surface-container-lowest group-hover:bg-surface-container p-md text-body-sm font-mono text-primary">
+                    <Link href={`/transactions/${split.id}`} className="hover:underline font-bold text-primary">
+                      {split.id}
+                    </Link>
+                  </td>
                   <td className="p-md text-body-sm text-on-surface">{split.bookingItemId}</td>
                   <td className="p-md text-right text-body-sm text-on-surface">Rp {(split.grossAmount / 1e6).toFixed(0)}M</td>
                   <td className="p-md text-right text-body-sm text-on-surface-variant">Rp {(split.microFeeAmount / 1e3).toFixed(0)}K</td>
