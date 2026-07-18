@@ -42,7 +42,7 @@ export default function VendorManagementPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
         <div className="flex flex-col gap-sm mb-md">
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-5 w-80" />
@@ -70,7 +70,7 @@ export default function VendorManagementPage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
         <div className="flex flex-col gap-sm mb-md">
           <h1 className="font-heading text-headline-lg text-on-surface">Vendor Management</h1>
           <p className="text-body-md text-on-surface-variant">Monitor, approve, and manage all vendor accounts</p>
@@ -101,7 +101,7 @@ export default function VendorManagementPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
       <div className="flex flex-col gap-sm mb-md">
         <h1 className="font-heading text-headline-lg text-on-surface">Vendor Management</h1>
         <p className="text-body-md text-on-surface-variant">Monitor, approve, and manage all vendor accounts</p>

@@ -23,6 +23,12 @@ import {
 import { formatCurrency, formatDate } from '@/lib/utils-simpul'
 import type { ExtendedPaymentSplit } from '@/lib/dummyData'
 
+// ponytail: resolve CSS var to hex for Leaflet
+function cssVar(varName: string): string {
+  if (typeof window === 'undefined') return '#000'
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim()
+}
+
 // Haversine formula to calculate distance in meters between two lat/long coordinates
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371e3 // Earth radius in meters
@@ -149,8 +155,8 @@ export default function TransactionDetailPage() {
         }).addTo(map)
 
         // Draw 100m geofence circle
-        const circleColor = isOutside ? '#ef4444' : '#10b981'
-        const circleFill = isOutside ? '#fca5a5' : '#a7f3d0'
+        const circleColor = isOutside ? cssVar('--md-sys-color-error') : cssVar('--md-sys-color-tertiary')
+        const circleFill = isOutside ? cssVar('--md-sys-color-error-container') : cssVar('--md-sys-color-tertiary-container')
         L.circle(eventLoc, {
           color: circleColor,
           fillColor: circleFill,
@@ -213,7 +219,7 @@ export default function TransactionDetailPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
         <Skeleton className="h-6 w-32 mb-xs" />
         <Skeleton className="h-10 w-96 mb-md" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-md">
@@ -251,7 +257,7 @@ export default function TransactionDetailPage() {
   const netAmount = split.netAmount
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       {/* Navigation Header */}
       <div className="flex items-center gap-xs">
         <Link href="/transactions" className="text-label-md text-on-surface-variant hover:text-on-surface flex items-center transition-colors">

@@ -69,9 +69,11 @@ export function calculateFeeBreakdown(grossAmount: number) {
 }
 
 /**
- * Get status badge color for all entity types
+ * Get status badge class for vendor/verification statuses
+ * Uses MD3 semantic tokens instead of hardcoded Tailwind colors
  */
 export function getStatusColor(status: string): string {
+  // Mapping ke CSS var-based classes — konsisten dengan MD3 semantic roles
   const colors: Record<string, string> = {
     // Vendor statuses
     'ACTIVE': 'bg-tertiary text-on-tertiary',
@@ -97,6 +99,59 @@ export function getStatusColor(status: string): string {
     'menunggu': 'bg-tertiary-container text-on-tertiary-container',
   }
   return colors[status] || 'bg-surface-container text-on-surface'
+}
+
+/**
+ * Get CYO/KYB-specific badge class (MD3 semantic tokens)
+ * VERIFIED → tertiary-container, PENDING → tertiary-container, REJECTED → error-container
+ */
+export function getBadgeClass(status: string): string {
+  switch (status) {
+    case 'VERIFIED':
+    case 'ACTIVE':
+      return 'bg-tertiary-container text-on-tertiary-container'
+    case 'REJECTED':
+      return 'bg-error-container text-on-error-container'
+    case 'PENDING':
+      return 'bg-tertiary-container/60 text-on-tertiary-container'
+    default:
+      return 'bg-surface-container text-on-surface-variant'
+  }
+}
+
+/**
+ * Get stat number color class (MD3 semantic)
+ */
+export function getStatColorClass(status: string): string {
+  switch (status) {
+    case 'VERIFIED':
+    case 'ACTIVE':
+      return 'text-tertiary'
+    case 'REJECTED':
+      return 'text-error'
+    case 'PENDING':
+      return 'text-tertiary'
+    default:
+      return 'text-on-surface'
+  }
+}
+
+/**
+ * Get alert banner class (MD3 semantic — error or success variant)
+ */
+export function getAlertBannerClass(type: 'success' | 'error'): string {
+  if (type === 'success') {
+    return 'bg-tertiary-container/20 border-tertiary-container'
+  }
+  return 'bg-error-container border-error'
+}
+
+/**
+ * Get icon color class for alert banners
+ */
+export function getAlertIconColor(type: 'success' | 'error'): string {
+  if (type === 'success') return 'text-tertiary'
+  return 'text-error'
 }
 
 /**

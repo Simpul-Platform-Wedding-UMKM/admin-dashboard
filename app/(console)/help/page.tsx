@@ -71,7 +71,7 @@ export default function HelpSupportPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold flex items-center gap-xs">
           <HelpCircle className="h-7 w-7 text-primary" /> Bantuan & Dukungan

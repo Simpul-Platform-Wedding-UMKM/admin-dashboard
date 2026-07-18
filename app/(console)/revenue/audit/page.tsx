@@ -94,7 +94,7 @@ export default function RevenueAuditPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
         <Skeleton className="h-6 w-32 mb-xs" />
         <Skeleton className="h-10 w-96 mb-md" />
         <Card className="p-md h-96"><Skeleton className="h-full w-full" /></Card>
@@ -124,7 +124,7 @@ export default function RevenueAuditPage() {
   const totalMicroFee = splits.reduce((sum, s) => sum + s.microFeeAmount, 0)
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       {/* Page Header */}
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Audit & Settlement Biaya Platform</h1>

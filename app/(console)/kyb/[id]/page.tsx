@@ -1,28 +1,21 @@
 'use client'
 
-import React, { useEffect, useState, startTransition } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
-import { getVendorById, updateVendor } from '@/lib/services/vendor'
+import { useParams } from 'next/navigation'
+import {
+  getVendorVerificationById,
+  approveVerification,
+  rejectVerification,
+  getVerificationLogs,
+} from '@/lib/services/kyb'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-import { 
-  ChevronLeft, 
-  Check, 
-  X, 
-  FileText, 
-  MapPin, 
-  Mail, 
-  Phone, 
-  Building, 
-  CreditCard, 
-  AlertTriangle,
-  ExternalLink,
-  Eye
-} from 'lucide-react'
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -30,34 +23,98 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { formatDate } from '@/lib/utils-simpul'
+} from '@/components/ui/dialog'
+import {
+  ChevronLeft,
+  Check,
+  X,
+  FileText,
+  MapPin,
+  Mail,
+  Phone,
+  Building,
+  CreditCard,
+  AlertTriangle,
+  ExternalLink,
+  Eye,
+  ZoomIn,
+  Clock,
+  ShieldCheck,
+  ShieldX,
+} from 'lucide-react'
+import { formatDate, formatDateTime, getRelativeTime, getBadgeClass } from '@/lib/utils-simpul'
 import type { ExtendedVendor } from '@/lib/dummyData'
+import type { VerificationLog } from '@/lib/types'
+
+// ── Document Tab Config ─────────────────────────────────────────────────────
+const DOC_TABS = [
+  { key: 'ktp', title: 'KTP Pemilik', label: 'KTP', icon: FileText },
+  { key: 'npwp', title: 'NPWP', label: 'NPWP', icon: FileText },
+  { key: 'siup', title: 'SIUP / NIB', label: 'SIUP', icon: FileText },
+  { key: 'mou', title: 'MOU Kemitraan', label: 'MOU', icon: FileText },
+] as const
+
+type DocKey = typeof DOC_TABS[number]['key']
+
+// ── Rejected Document Options ───────────────────────────────────────────────
+const REJECTABLE_DOCS = [
+  { key: 'ktp', label: 'KTP (Kartu Tanda Penduduk)' },
+  { key: 'npwp', label: 'NPWP (Nomor Pokok Wajib Pajak)' },
+  { key: 'siup', label: 'SIUP / NIB (Izin Usaha)' },
+  { key: 'mou', label: 'MOU (Perjanjian Kerjasama)' },
+]
+
+// ── Status Helpers ──────────────────────────────────────────────────────────
+
+function getStatusBadge(status: string) {
+  const cls = getBadgeClass(status)
+  const labels: Record<string, string> = {
+    'ACTIVE': 'TERVERIFIKASI',
+    'REJECTED': 'DITOLAK',
+    'PENDING': 'MENUNGGU',
+  }
+  return <Badge className={`${cls} border-current`}>{labels[status] || status}</Badge>
+}
+
+// ── Main Component ──────────────────────────────────────────────────────────
 
 export default function KYBDetailsPage() {
   const params = useParams()
-  const router = useRouter()
   const { toast } = useToast()
-  
+
   const id = params?.id as string
-  
+
+  // ── State ──────────────────────────────────────────────────────────────
   const [vendor, setVendor] = useState<ExtendedVendor | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [actionLoading, setActionLoading] = useState(false)
+  const [activeDocTab, setActiveDocTab] = useState<DocKey>('ktp')
+  const [logs, setLogs] = useState<VerificationLog[]>([])
+
+  // Approve dialog
+  const [isApproveOpen, setIsApproveOpen] = useState(false)
+  const [approveNotes, setApproveNotes] = useState('')
+
+  // Reject dialog
   const [isRejectOpen, setIsRejectOpen] = useState(false)
   const [rejectReason, setRejectReason] = useState('')
-  const [actionLoading, setActionLoading] = useState(false)
-  
-  // State for active document zoom modal
+  const [rejectedDocs, setRejectedDocs] = useState<Record<string, boolean>>({})
+
+  // Zoom modal
   const [zoomDoc, setZoomDoc] = useState<{ title: string; url: string } | null>(null)
 
+  // ── Fetch ───────────────────────────────────────────────────────────────
   const fetchVendor = async () => {
     setLoading(true)
     setError(null)
     try {
-      const data = await getVendorById(id)
-      setVendor(data as ExtendedVendor)
+      const [data, logData] = await Promise.all([
+        getVendorVerificationById(id),
+        getVerificationLogs(id),
+      ])
+      setVendor(data)
+      setLogs(logData)
     } catch (err: any) {
       setError(err?.message || 'Gagal memuat data vendor')
     } finally {
@@ -66,34 +123,31 @@ export default function KYBDetailsPage() {
   }
 
   useEffect(() => {
-    if (id) {
-      fetchVendor()
-    }
+    if (id) fetchVendor()
   }, [id])
+
+  // ── Actions ─────────────────────────────────────────────────────────────
+  const isProcessed = vendor?.status === 'ACTIVE' || vendor?.status === 'REJECTED'
 
   const handleApprove = async () => {
     setActionLoading(true)
     try {
-      const updated = await updateVendor(id, {
-        kycVerified: true,
-        status: 'ACTIVE' as any,
-        kycVerifiedAt: new Date().toISOString()
-      })
-      setVendor(updated as ExtendedVendor)
+      await approveVerification(id, approveNotes.trim() || undefined)
+      setVendor(prev => prev ? { ...prev, status: 'ACTIVE' as any, kycVerified: true, kycVerifiedAt: new Date().toISOString() } : null)
+      setIsApproveOpen(false)
+      setApproveNotes('')
+      // Refresh logs
+      const updatedLogs = await getVerificationLogs(id)
+      setLogs(updatedLogs)
       toast({
-        title: "KYB Disetujui",
-        description: `Vendor ${vendor?.name} telah berhasil diverifikasi dan diaktifkan.`,
-      })
-      // Navigate back to KYB list page using startTransition
-      startTransition(() => {
-        router.push('/kyb')
-        router.refresh()
+        title: 'Verifikasi Disetujui',
+        description: `Vendor ${vendor?.businessName} telah berhasil diverifikasi dan diaktifkan.`,
       })
     } catch (err: any) {
       toast({
-        variant: "destructive",
-        title: "Gagal menyetujui KYB",
-        description: err?.message || "Terjadi kesalahan sistem.",
+        variant: 'destructive',
+        title: 'Gagal menyetujui',
+        description: err?.message || 'Terjadi kesalahan sistem.',
       })
     } finally {
       setActionLoading(false)
@@ -103,57 +157,62 @@ export default function KYBDetailsPage() {
   const handleReject = async () => {
     if (!rejectReason.trim()) {
       toast({
-        variant: "destructive",
-        title: "Alasan penolakan kosong",
-        description: "Harap masukkan alasan penolakan dokumen.",
+        variant: 'destructive',
+        title: 'Alasan wajib diisi',
+        description: 'Harap masukkan alasan penolakan.',
       })
       return
     }
-    
+
+    const selectedDocs = Object.entries(rejectedDocs)
+      .filter(([_, v]) => v)
+      .map(([k]) => k)
+
     setActionLoading(true)
     try {
-      const updated = await updateVendor(id, {
-        kycVerified: false,
-        status: 'REJECTED' as any,
-        rejectionReason: rejectReason
-      } as any)
-      setVendor(updated as ExtendedVendor)
+      await rejectVerification(id, rejectReason.trim(), selectedDocs)
+      setVendor(prev => prev ? { ...prev, status: 'REJECTED' as any, kycVerified: false, rejectionReason: rejectReason.trim() } as ExtendedVendor : null)
       setIsRejectOpen(false)
+      setRejectReason('')
+      setRejectedDocs({})
+      // Refresh logs
+      const updatedLogs = await getVerificationLogs(id)
+      setLogs(updatedLogs)
       toast({
-        title: "KYB Ditolak",
-        description: `Pengajuan KYB dari ${vendor?.name} telah ditolak. Alasan: "${rejectReason}"`,
-      })
-      startTransition(() => {
-        router.push('/kyb')
-        router.refresh()
+        title: 'Verifikasi Ditolak',
+        description: `Pengajuan KYB dari ${vendor?.businessName} telah ditolak.`,
       })
     } catch (err: any) {
       toast({
-        variant: "destructive",
-        title: "Gagal menolak KYB",
-        description: err?.message || "Terjadi kesalahan sistem.",
+        variant: 'destructive',
+        title: 'Gagal menolak',
+        description: err?.message || 'Terjadi kesalahan sistem.',
       })
     } finally {
       setActionLoading(false)
-      setRejectReason('')
     }
   }
 
+  // ── Document Data ─────────────────────────────────────────────────────────
+  const getDocUrl = (key: DocKey): string => {
+    if (!vendor) return ''
+    const map: Record<DocKey, string | undefined> = {
+      ktp: vendor.ktpUrl,
+      npwp: vendor.npwpUrl,
+      siup: vendor.siupUrl,
+      mou: vendor.mouUrl,
+    }
+    return map[key] || ''
+  }
+
+  // ── Loading State ─────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
-        <div className="flex items-center gap-xs">
-          <Skeleton className="h-6 w-24" />
-        </div>
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+        <div className="flex items-center gap-xs"><Skeleton className="h-6 w-24" /></div>
         <div className="flex flex-col md:flex-row justify-between gap-md mb-sm">
-          <div>
-            <Skeleton className="h-8 w-64 mb-xs" />
-            <Skeleton className="h-4 w-40" />
-          </div>
-          <div className="flex gap-xs">
-            <Skeleton className="h-10 w-24" />
-            <Skeleton className="h-10 w-24" />
-          </div>
+          <div><Skeleton className="h-8 w-64 mb-xs" /><Skeleton className="h-4 w-40" /></div>
+          <div className="flex gap-xs"><Skeleton className="h-10 w-28" /><Skeleton className="h-10 w-28" /></div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-md">
           <Card className="lg:col-span-1 p-md space-y-md">
@@ -163,16 +222,14 @@ export default function KYBDetailsPage() {
           </Card>
           <Card className="lg:col-span-2 p-md space-y-md">
             <Skeleton className="h-6 w-1/3" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-sm">
-              <Skeleton className="h-40 w-full" />
-              <Skeleton className="h-40 w-full" />
-            </div>
+            <Skeleton className="h-64 w-full" />
           </Card>
         </div>
       </main>
     )
   }
 
+  // ── Error State ───────────────────────────────────────────────────────────
   if (error || !vendor) {
     return (
       <main className="flex flex-1 flex-col items-center justify-center p-md py-20 gap-md">
@@ -182,62 +239,63 @@ export default function KYBDetailsPage() {
           {error || 'Data detail vendor dengan ID tersebut tidak dapat ditemukan.'}
         </p>
         <Link href="/kyb">
-          <Button variant="outline">
-            <ChevronLeft className="mr-xs h-4 w-4" /> Kembali ke Daftar KYB
-          </Button>
+          <Button variant="outline"><ChevronLeft className="mr-xs h-4 w-4" /> Kembali ke Daftar KYB</Button>
         </Link>
       </main>
     )
   }
 
-  const documents = [
-    { key: 'ktp', title: 'KTP (Kartu Tanda Penduduk)', url: vendor.ktpUrl, label: 'Identitas Pemilik' },
-    { key: 'npwp', title: 'NPWP (Nomor Pokok Wajib Pajak)', url: vendor.npwpUrl, label: 'Dokumen Pajak' },
-    { key: 'siup', title: 'SIUP (Izin Usaha)', url: vendor.siupUrl, label: 'Legalitas Usaha' },
-    { key: 'mou', title: 'MOU / Perjanjian Kerjasama', url: vendor.mouUrl, label: 'Kontrak Kemitraan' },
-  ]
+  const currentDocUrl = getDocUrl(activeDocTab)
+  const currentDocTab = DOC_TABS.find(t => t.key === activeDocTab)!
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
-      {/* Navigation Header */}
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+      {/* ── Breadcrumb / Back ─────────────────────────────────────────── */}
       <div className="flex items-center gap-xs">
         <Link href="/kyb" className="text-label-md text-on-surface-variant hover:text-on-surface flex items-center transition-colors">
-          <ChevronLeft className="h-4 w-4" /> Kembali ke KYB
+          <ChevronLeft className="h-4 w-4" /> Kembali ke Verifikasi KYB
         </Link>
       </div>
 
-      {/* Action Header Banner */}
+      {/* ── Header Banner ─────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md pb-xs border-b border-outline-variant">
         <div>
           <div className="flex items-center gap-sm mb-xs">
-            <h1 className="font-heading text-headline-lg text-on-surface">{vendor.businessName}</h1>
-            <Badge className={
-              vendor.status === 'ACTIVE' 
-                ? 'bg-tertiary-container text-on-tertiary-container' 
-                : vendor.status === 'REJECTED' 
-                  ? 'bg-error-container text-on-error-container' 
-                  : 'bg-tertiary text-on-tertiary'
-            }>
-              {vendor.status === 'ACTIVE' ? 'VERIFIED' : vendor.status}
-            </Badge>
+            <h1 className="font-heading text-headline-lg text-on-surface break-words min-w-0">{vendor.businessName}</h1>
+            {getStatusBadge(vendor.status)}
           </div>
-          <p className="text-body-md text-on-surface-variant">Diajukan oleh: <span className="font-semibold">{vendor.name}</span> &bull; {vendor.businessType}</p>
+          <p className="text-body-md text-on-surface-variant">
+            Diajukan oleh: <span className="font-semibold">{vendor.name}</span> &bull; {vendor.businessType}
+            {vendor.createdAt && (
+              <span className="ml-sm text-label-sm">
+                &bull; Submit: {formatDate(vendor.createdAt)}
+              </span>
+            )}
+          </p>
         </div>
 
+        {/* Action buttons (only when PENDING) */}
         {vendor.status === 'PENDING' && (
           <div className="flex gap-sm w-full md:w-auto">
-            <Button 
-              variant="outline" 
-              onClick={() => setIsRejectOpen(true)}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setRejectReason('')
+                setRejectedDocs({})
+                setIsRejectOpen(true)
+              }}
               disabled={actionLoading}
-              className="flex-1 md:flex-initial border-error text-error hover:bg-error/10 hover:text-error"
+              className="flex-1 md:flex-initial border-error text-error hover:bg-error/10 hover:text-error rounded-corner-full"
             >
               <X className="mr-xs h-4 w-4" /> Tolak Pengajuan
             </Button>
-            <Button 
-              onClick={handleApprove}
+            <Button
+              onClick={() => {
+                setApproveNotes('')
+                setIsApproveOpen(true)
+              }}
               disabled={actionLoading}
-              className="flex-1 md:flex-initial bg-tertiary text-on-tertiary hover:bg-tertiary/90"
+              className="flex-1 md:flex-initial bg-primary text-on-primary hover:bg-primary/90 rounded-corner-full"
             >
               <Check className="mr-xs h-4 w-4" /> Setujui Verifikasi
             </Button>
@@ -245,186 +303,346 @@ export default function KYBDetailsPage() {
         )}
       </div>
 
-      {/* Rejection Alert Box */}
-      {vendor.status === 'REJECTED' && (
-        <Card className="p-md bg-error-container border border-error/20 flex gap-sm items-start">
-          <AlertTriangle className="h-5 w-5 text-error mt-0.5" />
+      {/* ── Rejection Alert (when REJECTED) ────────────────────────────── */}
+      {vendor.status === 'REJECTED' && vendor.rejectionReason && (
+        <Card className="p-md bg-error-container/20 border border-error flex gap-sm items-start">
+          <AlertTriangle className="h-5 w-5 text-error mt-0.5 shrink-0" />
           <div>
-            <h4 className="text-body-md font-semibold text-error">Pengajuan Verifikasi KYB Ditolak</h4>
-            <p className="text-label-md text-on-surface-variant mt-xs">
-              Alasan Penolakan: <span className="font-semibold text-on-surface font-mono">{vendor.rejectionReason || 'Tidak ada alasan spesifik.'}</span>
+            <h4 className="text-body-md font-semibold text-on-error-container">Pengajuan Verifikasi Ditolak</h4>
+            <p className="text-label-md text-error mt-xs">
+              Alasan: <span className="font-semibold">{vendor.rejectionReason}</span>
             </p>
           </div>
         </Card>
       )}
 
-      {/* Main Grid Layout */}
+      {/* ── Verified Alert ─────────────────────────────────────────────── */}
+      {vendor.status === 'ACTIVE' && (
+        <Card className="p-md bg-tertiary-container/20 border border-tertiary-container flex gap-sm items-start">
+          <ShieldCheck className="h-5 w-5 text-tertiary mt-0.5 shrink-0" />
+          <div>
+            <h4 className="text-body-md font-semibold text-on-tertiary-container">Vendor Telah Terverifikasi</h4>
+            <p className="text-label-md text-tertiary mt-xs">
+              {vendor.kycVerifiedAt
+                ? `Diverifikasi pada: ${formatDateTime(vendor.kycVerifiedAt)}`
+                : 'Status verifikasi aktif.'}
+            </p>
+          </div>
+        </Card>
+      )}
+
+      {/* ── Main Layout ────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-md">
-        
-        {/* Left Side: Business & Account Information */}
+
+        {/* ═══ LEFT COLUMN: Business Info ═══ */}
         <div className="lg:col-span-1 space-y-md">
-          
+
           {/* Vendor Profile Card */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-            <h3 className="text-headline-md text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-xs">
-              <Building className="h-5 w-5 text-tertiary" /> Profil Bisnis
+            <h3 className="text-title-lg text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-sm">
+                <Building className="h-5 w-5 text-primary" /> Profil Bisnis
             </h3>
-            
             <div className="space-y-sm">
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Nama Perusahaan / Bisnis</p>
-                <p className="text-body-md text-on-surface font-semibold">{vendor.businessName}</p>
-              </div>
-              
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Kategori Usaha</p>
-                <p className="text-body-md text-on-surface">{vendor.businessType}</p>
-              </div>
-
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Penanggung Jawab</p>
-                <p className="text-body-md text-on-surface">{vendor.name}</p>
-              </div>
-
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Region / Wilayah Operasi</p>
-                <p className="text-body-md text-on-surface flex items-center gap-xs">
-                  <MapPin className="h-4 w-4 text-on-surface-variant" /> {vendor.region}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Alamat Lengkap</p>
-                <p className="text-body-md text-on-surface leading-relaxed">{vendor.address}</p>
-              </div>
-
+              <InfoRow label="Nama Perusahaan" value={vendor.businessName} bold />
+              <InfoRow label="Kategori Usaha" value={vendor.businessType} />
+              <InfoRow label="Penanggung Jawab" value={vendor.name} />
+              <InfoRow label="Wilayah Operasi" value={vendor.region} icon={<MapPin className="h-4 w-4 text-on-surface-variant" />} />
+              <InfoRow label="Alamat Lengkap" value={vendor.address} />
               <div className="pt-xs border-t border-outline-variant space-y-sm">
-                <div className="flex items-center gap-sm">
-                  <Mail className="h-4 w-4 text-on-surface-variant" />
-                  <span className="text-body-md text-on-surface">{vendor.email}</span>
-                </div>
-                <div className="flex items-center gap-sm">
-                  <Phone className="h-4 w-4 text-on-surface-variant" />
-                  <span className="text-body-md text-on-surface">{vendor.phone}</span>
-                </div>
+                <InfoRow label="Email" value={vendor.email} icon={<Mail className="h-4 w-4 text-on-surface-variant" />} />
+                <InfoRow label="Telepon" value={vendor.phone} icon={<Phone className="h-4 w-4 text-on-surface-variant" />} />
               </div>
             </div>
           </Card>
 
           {/* Bank Details Card */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-            <h3 className="text-headline-md text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-xs">
-              <CreditCard className="h-5 w-5 text-tertiary" /> Informasi Rekening Payout
+            <h3 className="text-title-lg text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-sm">
+              <CreditCard className="h-5 w-5 text-primary" /> Rekening Payout
             </h3>
-            
             <div className="space-y-sm">
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Nama Bank</p>
-                <p className="text-body-md text-on-surface font-semibold">{vendor.bankName} ({vendor.bankCode})</p>
-              </div>
-
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Nomor Rekening</p>
-                <p className="text-body-md text-on-surface font-mono font-bold tracking-wider">{vendor.bankAccountNumber}</p>
-              </div>
-
-              <div>
-                <p className="text-label-sm text-on-surface-variant uppercase">Nama Pemilik Rekening</p>
-                <p className="text-body-md text-on-surface">{vendor.bankAccountName}</p>
-              </div>
+              <InfoRow label="Nama Bank" value={`${vendor.bankName} (${vendor.bankCode})`} bold />
+              <InfoRow label="Nomor Rekening" value={vendor.bankAccountNumber} mono />
+              <InfoRow label="Pemilik Rekening" value={vendor.bankAccountName} />
             </div>
+          </Card>
+
+          {/* ── Verification History ───────────────────────────────── */ }
+          <Card className="p-md bg-surface-container-lowest border border-outline-variant">
+            <h3 className="text-title-lg text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-sm">
+              <Clock className="h-5 w-5 text-primary" /> Riwayat Verifikasi
+            </h3>
+            {logs.length === 0 ? (
+              <p className="text-body-sm text-on-surface-variant italic">Belum ada riwayat verifikasi.</p>
+            ) : (
+              <div className="space-y-sm">
+                {[...logs].reverse().map((log) => (
+                  <div key={log.id} className="flex gap-sm items-start p-sm bg-surface-container rounded-lg border border-outline-variant">
+                    <div className={`mt-0.5 shrink-0 ${log.action === 'APPROVE' ? 'text-tertiary' : 'text-error'}`}>
+                      {log.action === 'APPROVE'
+                        ? <ShieldCheck className="h-4 w-4" />
+                        : <ShieldX className="h-4 w-4" />
+                      }
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-body-sm text-on-surface font-semibold">
+                        {log.action === 'APPROVE' ? 'Disetujui' : 'Ditolak'} oleh {log.adminName}
+                      </p>
+                      {log.notes && <p className="text-label-sm text-on-surface-variant mt-0.5 break-words">{log.notes}</p>}
+                      {log.reason && (
+                        <div className="mt-1 p-2 bg-error-container/30 rounded border border-error">
+                          <p className="text-label-xs text-on-error-container font-medium mb-0.5">Alasan Penolakan:</p>
+                          <p className="text-label-sm text-error break-words">{log.reason}</p>
+                          {log.rejectedDocuments && log.rejectedDocuments.length > 0 && (
+                            <div className="flex gap-1 mt-1">
+                              {log.rejectedDocuments.map(d => (
+                                <span key={d} className="text-[10px] font-semibold px-1.5 py-0.5 bg-error-container text-on-error-container rounded uppercase">{d}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      <p className="text-label-xs text-on-surface-variant/60 mt-1">
+                        {formatDateTime(log.createdAt)} &bull; {getRelativeTime(log.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
         </div>
 
-        {/* Right Side: Uploaded Documents Section */}
+        {/* ═══ RIGHT COLUMN: Document Viewer ═══ */}
         <div className="lg:col-span-2">
-          <Card className="p-md bg-surface-container-lowest border border-outline-variant h-full">
-            <h3 className="text-headline-md text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-xs">
-              <FileText className="h-5 w-5 text-tertiary" /> Berkas Legalitas & Dokumen Pendukung
+          <Card className="bg-surface-container-lowest border border-outline-variant overflow-hidden">
+            <h3 className="text-title-lg text-on-surface font-semibold p-md pb-xs border-b border-outline-variant flex items-center gap-sm">
+              <FileText className="h-5 w-5 text-primary" /> Berkas Legalitas & Dokumen Pendukung
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
-              {documents.map((doc) => (
-                <Card key={doc.key} className="overflow-hidden bg-surface-container border border-outline-variant flex flex-col justify-between group">
-                  <div className="p-sm pb-xs">
-                    <span className="text-label-sm bg-surface-variant text-on-surface-variant px-2 py-1 rounded-sm">{doc.label}</span>
-                    <h4 className="text-body-md font-semibold text-on-surface mt-xs">{doc.title}</h4>
-                  </div>
-                  
-                  {/* Document Thumbnail / Interactive Area */}
-                  <div className="relative h-48 w-full bg-black/5 flex items-center justify-center overflow-hidden border-t border-b border-outline-variant bg-cover bg-center" style={{ backgroundImage: doc.url ? `url('${doc.url}')` : 'none' }}>
-                    {!doc.url && (
-                      <div className="flex flex-col items-center gap-xs text-on-surface-variant">
-                        <FileText className="h-10 w-10 opacity-40" />
-                        <span className="text-label-sm">File tidak tersedia</span>
-                      </div>
-                    )}
-                    
-                    {doc.url && (
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-sm">
-                        <Button 
-                          size="sm" 
-                          variant="secondary"
-                          onClick={() => setZoomDoc({ title: doc.title, url: doc.url! })}
-                        >
-                          <Eye className="h-4 w-4 mr-xs" /> Pratinjau
-                        </Button>
-                        <a href={doc.url} target="_blank" rel="noreferrer" className="no-underline">
-                          <Button size="sm" variant="outline" className="bg-white/80 hover:bg-white text-black border-none">
-                            <ExternalLink className="h-4 w-4 mr-xs" /> Unduh <span className="sr-only">Unduh berkas</span>
-                          </Button>
-                        </a>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-sm flex justify-between items-center text-label-sm text-on-surface-variant">
-                    <span>Format: Gambar / JPG</span>
-                    {doc.url && (
-                      <button 
-                        onClick={() => setZoomDoc({ title: doc.title, url: doc.url! })}
-                        className="text-tertiary font-semibold hover:underline flex items-center gap-xs bg-transparent border-none cursor-pointer"
-                      >
-                        Pratinjau <ExternalLink className="h-3 w-3" />
-                      </button>
-                    )}
-                  </div>
-                </Card>
+            {/* Document Tabs */}
+            <div className="flex border-b border-outline-variant overflow-x-auto">
+              {DOC_TABS.map(tab => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveDocTab(tab.key)}
+                  className={`flex items-center gap-1.5 px-4 py-3 text-label-lg font-medium transition-colors whitespace-nowrap ${
+                    activeDocTab === tab.key
+                      ? 'text-primary border-b-2 border-primary bg-primary/5'
+                      : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container'
+                  }`}
+                >
+                  <tab.icon className="h-5 w-5" />
+                  {tab.label}
+                  {getDocUrl(tab.key) && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-tertiary" title="Tersedia" />
+                  )}
+                </button>
               ))}
+            </div>
+
+            {/* Document Preview Area */}
+            <div className="p-md">
+              <div className="flex items-center justify-between mb-sm">
+                <div>
+                  <h4 className="text-body-md text-on-surface font-semibold">{currentDocTab.title}</h4>
+                  <p className="text-label-sm text-on-surface-variant">
+                    {currentDocUrl ? 'Dokumen tersedia — klik untuk memperbesar' : 'Dokumen tidak tersedia'}
+                  </p>
+                </div>
+                {currentDocUrl && (
+                  <div className="flex gap-xs">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setZoomDoc({ title: currentDocTab.title, url: currentDocUrl })}
+                    >
+                      <ZoomIn className="h-4 w-4 mr-xs" /> Perbesar
+                    </Button>
+                    <a href={currentDocUrl} target="_blank" rel="noreferrer">
+                      <Button size="sm" variant="outline">
+                        <ExternalLink className="h-4 w-4 mr-xs" /> Buka
+                      </Button>
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {/* Document Image */}
+              {currentDocUrl ? (
+                <div
+                  className="relative w-full rounded-lg overflow-hidden border border-outline-variant bg-surface-container cursor-pointer group"
+                  onClick={() => setZoomDoc({ title: currentDocTab.title, url: currentDocUrl })}
+                  style={{ minHeight: 400 }}
+                >
+                  <img
+                    src={currentDocUrl}
+                    alt={currentDocTab.title}
+                    className="w-full h-auto object-contain"
+                    style={{ maxHeight: 500 }}
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-xs bg-black/60 text-white px-4 py-2 rounded-lg">
+                      <Eye className="h-4 w-4" /> Klik untuk memperbesar
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-64 rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center bg-surface-container/50 text-on-surface-variant">
+                  <FileText className="h-12 w-12 mb-sm opacity-30" />
+                  <p className="text-label-md">Dokumen belum diunggah</p>
+                  <p className="text-label-sm opacity-60">Vendor belum mengunggah dokumen {currentDocTab.title.toLowerCase()}.</p>
+                </div>
+              )}
+
+              {/* Document Status Indicators */}
+              <div className="flex gap-2 mt-md">
+                {DOC_TABS.map(tab => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveDocTab(tab.key)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-label-sm transition-colors ${
+                      activeDocTab === tab.key
+                        ? 'bg-primary text-on-primary'
+                        : getDocUrl(tab.key)
+                          ? 'bg-tertiary-container/30 text-on-tertiary-container border-tertiary-container'
+                          : 'bg-surface-container text-on-surface-variant border border-outline-variant'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${getDocUrl(tab.key) ? 'bg-tertiary' : 'bg-outline-variant'}`} />
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </Card>
         </div>
       </div>
 
-      {/* Reject Reason Modal/Dialog */}
+      {/* ═════════════════════════════════════════════════════════════════
+          DIALOGS
+         ═════════════════════════════════════════════════════════════════ */}
+
+      {/* ── Approve Confirmation Dialog ────────────────────────────────── */}
+      <Dialog open={isApproveOpen} onOpenChange={setIsApproveOpen}>
+        <DialogContent className="sm:max-w-md bg-surface-container-lowest border border-outline-variant">
+          <DialogHeader>
+            <DialogTitle className="text-headline-md text-on-surface flex items-center gap-xs">
+              <ShieldCheck className="h-5 w-5 text-tertiary" /> Setujui Verifikasi
+            </DialogTitle>
+            <DialogDescription className="text-body-md text-on-surface-variant">
+              Anda akan menyetujui verifikasi KYB untuk <span className="font-semibold text-on-surface">{vendor.businessName}</span>.
+              Vendor akan dapat menerima pesanan setelah disetujui.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-sm space-y-sm">
+            <div className="p-sm bg-tertiary-container/20 rounded-lg border border-tertiary-container">
+              <p className="text-label-sm text-on-tertiary-container font-semibold mb-xs">Efek setelah persetujuan:</p>
+              <ul className="text-label-sm text-tertiary space-y-1 list-disc list-inside">
+                <li>Status vendor berubah menjadi <strong>VERIFIED</strong></li>
+                <li>Vendor dapat menerima booking/pesanan</li>
+                <li>Notifikasi akan dikirim ke vendor</li>
+              </ul>
+            </div>
+
+            <div>
+              <label className="text-label-sm text-on-surface-variant block mb-1">Catatan (opsional)</label>
+              <Textarea
+                placeholder="Contoh: Dokumen lengkap dan valid. Tidak ada masalah."
+                value={approveNotes}
+                onChange={e => setApproveNotes(e.target.value)}
+                rows={2}
+                className="bg-surface-container border border-outline-variant text-on-surface resize-none"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="flex gap-sm">
+            <Button variant="outline" onClick={() => setIsApproveOpen(false)} disabled={actionLoading} className="flex-1 sm:flex-initial">
+              Batal
+            </Button>
+            <Button
+              onClick={handleApprove}
+              disabled={actionLoading}
+              className="flex-1 sm:flex-initial bg-primary text-on-primary hover:bg-primary/90 rounded-corner-full"
+            >
+              {actionLoading ? 'Memproses...' : 'Setujui Verifikasi'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── Reject Confirmation Dialog ─────────────────────────────────── */}
       <Dialog open={isRejectOpen} onOpenChange={setIsRejectOpen}>
         <DialogContent className="sm:max-w-md bg-surface-container-lowest border border-outline-variant">
           <DialogHeader>
             <DialogTitle className="text-headline-md text-error flex items-center gap-xs">
-              <AlertTriangle className="h-5 w-5" /> Tolak Verifikasi KYB
+              <ShieldX className="h-5 w-5" /> Tolak Verifikasi
             </DialogTitle>
             <DialogDescription className="text-body-md text-on-surface-variant">
-              Masukkan alasan mengapa pengajuan verifikasi legalitas dari {vendor.businessName} ditolak. Alasan ini akan dikirimkan kepada vendor agar mereka dapat memperbaiki dokumen mereka.
+              Masukkan alasan penolakan dan pilih dokumen yang bermasalah.
+              Alasan ini akan dikirimkan ke <span className="font-semibold">{vendor.businessName}</span>.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="py-sm">
-            <Textarea
-              placeholder="Contoh: Foto KTP buram, tidak terbaca, dan dokumen SIUP telah kadaluarsa."
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              rows={4}
-              className="bg-surface-container border border-outline-variant text-on-surface resize-none focus-visible:ring-tertiary"
-            />
+          <div className="py-sm space-y-md">
+            {/* Reason field */}
+            <div>
+              <label className="text-label-sm text-on-surface font-semibold block mb-1">
+                Alasan Penolakan <span className="text-error">*</span>
+              </label>
+              <Textarea
+                placeholder="Contoh: Foto KTP buram, tidak terbaca, dan dokumen SIUP telah kadaluarsa."
+                value={rejectReason}
+                onChange={e => setRejectReason(e.target.value)}
+                rows={3}
+                className="bg-surface-container border border-outline-variant text-on-surface resize-none focus-visible:ring-error"
+              />
+            </div>
+
+            {/* Rejected documents checkboxes */}
+            <div>
+              <label className="text-label-sm text-on-surface font-semibold block mb-2">
+                Dokumen yang Bermasalah
+              </label>
+              <div className="space-y-2">
+                {REJECTABLE_DOCS.map(doc => (
+                  <label
+                    key={doc.key}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-container transition-colors cursor-pointer"
+                  >
+                    <Checkbox
+                      checked={rejectedDocs[doc.key] || false}
+                      onCheckedChange={(checked) =>
+                        setRejectedDocs(prev => ({ ...prev, [doc.key]: checked === true }))
+                      }
+                      className="border-outline-variant data-[state=checked]:bg-error data-[state=checked]:border-error"
+                    />
+                    <span className="text-body-sm text-on-surface">{doc.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Effects warning */}
+            <div className="p-sm bg-error-container/30 rounded-lg border border-error">
+              <p className="text-label-sm text-on-error-container font-semibold mb-xs">Efek setelah penolakan:</p>
+              <ul className="text-label-sm text-error space-y-1 list-disc list-inside">
+                <li>Status vendor berubah menjadi <strong>REJECTED</strong></li>
+                <li>Vendor harus mengunggah ulang dokumen</li>
+                <li>Alasan penolakan akan dikirim via notifikasi</li>
+              </ul>
+            </div>
           </div>
 
-          <DialogFooter className="flex gap-sm sm:gap-none">
+          <DialogFooter className="flex gap-sm">
             <Button
-              type="button"
               variant="outline"
               onClick={() => {
                 setIsRejectOpen(false)
                 setRejectReason('')
+                setRejectedDocs({})
               }}
               disabled={actionLoading}
               className="flex-1 sm:flex-initial"
@@ -432,10 +650,9 @@ export default function KYBDetailsPage() {
               Batal
             </Button>
             <Button
-              type="button"
               onClick={handleReject}
               disabled={actionLoading || !rejectReason.trim()}
-              className="flex-1 sm:flex-initial bg-error text-on-error hover:bg-error/95"
+              className="flex-1 sm:flex-initial bg-error text-on-error hover:bg-error/90 rounded-corner-full"
             >
               {actionLoading ? 'Memproses...' : 'Tolak & Kirim'}
             </Button>
@@ -443,25 +660,30 @@ export default function KYBDetailsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Document Zoom / Preview Modal */}
+      {/* ── Document Zoom Modal ────────────────────────────────────────── */}
       {zoomDoc && (
         <Dialog open={!!zoomDoc} onOpenChange={(open) => !open && setZoomDoc(null)}>
-          <DialogContent className="max-w-3xl w-[90vw] p-0 overflow-hidden bg-black border border-outline-variant">
+          <DialogContent className="max-w-4xl w-[95vw] p-0 overflow-hidden bg-black border border-outline-variant">
             <DialogHeader className="p-sm bg-surface-container-lowest border-b border-outline-variant flex flex-row items-center justify-between">
               <div>
                 <DialogTitle className="text-body-lg text-on-surface font-semibold">{zoomDoc.title}</DialogTitle>
                 <DialogDescription className="text-label-sm text-on-surface-variant">Pratinjau Resolusi Penuh</DialogDescription>
               </div>
-              <Button size="icon" variant="ghost" className="h-8 w-8 hover:bg-surface-container-high rounded-full self-start" onClick={() => setZoomDoc(null)}>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8 hover:bg-surface-container-high rounded-full self-start"
+                onClick={() => setZoomDoc(null)}
+              >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Tutup pratinjau</span>
               </Button>
             </DialogHeader>
-            <div className="relative w-full h-[65vh] bg-black flex items-center justify-center p-sm">
-              <img 
-                src={zoomDoc.url} 
+            <div className="relative w-full h-[70vh] bg-black flex items-center justify-center p-sm overflow-auto">
+              <img
+                src={zoomDoc.url}
                 alt={zoomDoc.title}
-                className="max-w-full max-h-full object-contain rounded-md border border-outline-variant shadow-lg"
+                className="max-w-none object-contain rounded-md border border-outline-variant shadow-lg"
               />
             </div>
             <div className="p-sm bg-surface-container-lowest border-t border-outline-variant flex justify-end gap-sm">
@@ -476,5 +698,31 @@ export default function KYBDetailsPage() {
         </Dialog>
       )}
     </main>
+  )
+}
+
+// ── Helper: Info Row Component ──────────────────────────────────────────────
+
+function InfoRow({
+  label,
+  value,
+  icon,
+  bold = false,
+  mono = false,
+}: {
+  label: string
+  value: string
+  icon?: React.ReactNode
+  bold?: boolean
+  mono?: boolean
+}) {
+  return (
+    <div className="min-w-0">
+      <p className="text-label-sm text-on-surface-variant uppercase">{label}</p>
+      <p className={`text-body-md text-on-surface ${bold ? 'font-semibold' : ''} ${mono ? 'font-mono tracking-wider' : ''} flex items-center gap-xs min-w-0 break-words`}>
+        {icon}
+        <span className="min-w-0">{value}</span>
+      </p>
+    </div>
   )
 }

@@ -153,6 +153,60 @@ async function handleMockRequest(endpoint: string, options?: RequestInit): Promi
     return dummyDb.getAIAnalyticsLogs()
   }
 
+  // ── KYB Verification Endpoints ──────────────────────────────────────
+
+  // GET /admin/vendor-verifications
+  if (endpoint === '/admin/vendor-verifications' && method === 'GET') {
+    return dummyDb.getVendors().map(v => ({
+      vendorId: v.id,
+      businessName: v.businessName,
+      category: v.businessType,
+      region: v.region,
+      status: v.status === 'ACTIVE' ? 'VERIFIED' : v.status === 'REJECTED' ? 'REJECTED' : 'PENDING',
+      submittedAt: v.createdAt,
+      documents: {
+        ktpUrl: v.ktpUrl || '',
+        npwpUrl: v.npwpUrl || '',
+        siupUrl: v.siupUrl || '',
+        mouUrl: v.mouUrl || '',
+      },
+    }))
+  }
+
+  // GET /admin/vendor-verifications/:id
+  const kybDetailMatch = endpoint.match(/^\/admin\/vendor-verifications\/([^/]+)$/)
+  if (kybDetailMatch && method === 'GET') {
+    const id = kybDetailMatch[1]
+    const vendor = dummyDb.getVendorById(id)
+    if (!vendor) throw new ApiError(404, 'Vendor tidak ditemukan')
+    return vendor
+  }
+
+  // POST /admin/vendor-verifications/:id/approve
+  const kybApproveMatch = endpoint.match(/^\/admin\/vendor-verifications\/([^/]+)\/approve$/)
+  if (kybApproveMatch && method === 'POST') {
+    const id = kybApproveMatch[1]
+    dummyDb.updateVendor(id, { kycVerified: true, status: 'ACTIVE' as any, kycVerifiedAt: new Date().toISOString() })
+    dummyDb.addVerificationLog({ vendorId: id, adminId: 'admin-1', adminName: 'Admin Super', action: 'APPROVE', notes: body?.notes })
+    return { success: true }
+  }
+
+  // POST /admin/vendor-verifications/:id/reject
+  const kybRejectMatch = endpoint.match(/^\/admin\/vendor-verifications\/([^/]+)\/reject$/)
+  if (kybRejectMatch && method === 'POST') {
+    const id = kybRejectMatch[1]
+    dummyDb.updateVendor(id, { kycVerified: false, status: 'REJECTED' as any, rejectionReason: body?.reason } as any)
+    dummyDb.addVerificationLog({ vendorId: id, adminId: 'admin-1', adminName: 'Admin Super', action: 'REJECT', reason: body?.reason, rejectedDocuments: body?.rejectedDocuments })
+    return { success: true }
+  }
+
+  // GET /admin/vendor-verifications/:id/logs
+  const kybLogsMatch = endpoint.match(/^\/admin\/vendor-verifications\/([^/]+)\/logs$/)
+  if (kybLogsMatch && method === 'GET') {
+    const vendorId = kybLogsMatch[1]
+    return dummyDb.getVerificationLogs(vendorId)
+  }
+
   throw new ApiError(404, `Mock endpoint ${method} ${endpoint} tidak ditemukan`)
 }
 

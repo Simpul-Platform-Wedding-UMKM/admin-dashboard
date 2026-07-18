@@ -3,6 +3,11 @@
 import { ChartDataPoint } from '@/lib/types'
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 
+function cssVar(name: string, fallback: string): string {
+  if (typeof window === 'undefined') return fallback
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+}
+
 interface DashboardChartsProps {
   transaksiData: ChartDataPoint[]
   vendorGrowthData: ChartDataPoint[]
@@ -28,23 +33,23 @@ export function DashboardCharts({ transaksiData, vendorGrowthData }: DashboardCh
             data={transaksiData}
             margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#d5c2c1" />
-            <XAxis dataKey="name" stroke="#514443" style={{ fontSize: '12px' }} />
-            <YAxis stroke="#514443" style={{ fontSize: '12px' }} />
+            <CartesianGrid strokeDasharray="3 3" stroke={cssVar('--md-sys-color-outline-variant', '#d5c2c1')} />
+            <XAxis dataKey="name" stroke={cssVar('--md-sys-color-on-surface-variant', '#514443')} style={{ fontSize: '12px' }} />
+            <YAxis stroke={cssVar('--md-sys-color-on-surface-variant', '#514443')} style={{ fontSize: '12px' }} />
             <Tooltip 
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #d5c2c1',
-                borderRadius: '8px',
-              }}
-              cursor={{ stroke: '#815252', strokeWidth: 1 }}
+                          contentStyle={{
+                            backgroundColor: 'var(--md-sys-color-surface-container-lowest)',
+                            border: '1px solid var(--md-sys-color-outline-variant)',
+                            borderRadius: '8px',
+                          }}
+                          cursor={{ stroke: cssVar('--md-sys-color-primary', '#815252'), strokeWidth: 1 }}
             />
             <Line
-              type="monotone"
-              dataKey="value"
-              stroke="#815252"
-              strokeWidth={2}
-              dot={{ fill: '#815252', r: 4 }}
+                          type="monotone"
+                          dataKey="value"
+                          stroke={cssVar('--md-sys-color-primary', '#815252')}
+                          strokeWidth={2}
+                          dot={{ fill: cssVar('--md-sys-color-primary', '#815252'), r: 4 }}
               activeDot={{ r: 6 }}
               name="Transaksi"
             />
@@ -71,7 +76,7 @@ export function DashboardCharts({ transaksiData, vendorGrowthData }: DashboardCh
               labelLine={false}
               label={({ name, value }) => `${name}: ${value}`}
               outerRadius={80}
-              fill="#8884d8"
+              fill={cssVar('--md-sys-color-primary-container', '#8884d8')}
               dataKey="value"
             >
               {vendorGrowthData.map((entry, index) => (
@@ -79,11 +84,11 @@ export function DashboardCharts({ transaksiData, vendorGrowthData }: DashboardCh
               ))}
             </Pie>
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#ffffff',
-                border: '1px solid #d5c2c1',
-                borderRadius: '8px',
-              }}
+                          contentStyle={{
+                            backgroundColor: 'var(--md-sys-color-surface-container-lowest)',
+                            border: '1px solid var(--md-sys-color-outline-variant)',
+                            borderRadius: '8px',
+                          }}
             />
           </PieChart>
         </ResponsiveContainer>

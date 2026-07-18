@@ -81,7 +81,7 @@ export default function RiskCompliancePage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Risiko & Kepatuhan</h1>
           <p className="text-body-md text-on-surface-variant">Pantau kepatuhan mitra vendor, faktor risiko platform, dan log audit keamanan.</p>
@@ -125,7 +125,7 @@ export default function RiskCompliancePage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Risiko & Kepatuhan</h1>
           <p className="text-body-md text-on-surface-variant">Pantau kepatuhan mitra vendor, faktor risiko platform, dan log audit keamanan.</p>
@@ -140,7 +140,7 @@ export default function RiskCompliancePage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Risiko & Kepatuhan</h1>
         <p className="text-body-md text-on-surface-variant">Pantau kepatuhan mitra vendor, faktor risiko platform, dan log audit keamanan.</p>
@@ -154,7 +154,7 @@ export default function RiskCompliancePage() {
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Lolos Verifikasi</p>
-          <p className="text-headline-lg text-green-600 font-bold">{complianceChecks.filter(c => c.status === 'PASSED').length}</p>
+          <p className="text-headline-lg text-tertiary font-bold">{complianceChecks.filter(c => c.status === 'PASSED').length}</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Peringatan</p>

@@ -84,6 +84,13 @@ export enum AccountRole {
   CONSUMER = 'CONSUMER',
 }
 
+export enum KYBStatus {
+  UNSUBMITTED = 'UNSUBMITTED',
+  PENDING = 'PENDING',
+  VERIFIED = 'VERIFIED',
+  REJECTED = 'REJECTED',
+}
+
 // ============================================================================
 // CORE TYPES
 // ============================================================================
@@ -249,6 +256,33 @@ export interface AuditLog {
   entityId: string;
   changes: Record<string, any>;
   ipAddress: string;
+  createdAt: string;
+}
+
+export interface VendorVerification {
+  vendorId: string;
+  businessName: string;
+  category: string;
+  region: string;
+  status: KYBStatus;
+  submittedAt?: string;
+  documents: {
+    ktpUrl: string;
+    npwpUrl: string;
+    siupUrl: string;
+    mouUrl: string;
+  };
+}
+
+export interface VerificationLog {
+  id: string;
+  vendorId: string;
+  adminId: string;
+  adminName: string;
+  action: 'APPROVE' | 'REJECT';
+  notes?: string;
+  reason?: string;
+  rejectedDocuments?: string[];
   createdAt: string;
 }
 

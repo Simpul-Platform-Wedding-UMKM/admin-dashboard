@@ -275,7 +275,7 @@ export default function HelpdeskInboxPage() {
                   >
                     {activeTicket.status === 'MENUNGGU' ? (
                       <>
-                        <CheckCircle2 className="h-4 w-4 mr-xs text-green-600" /> Selesaikan Tiket
+                        <CheckCircle2 className="h-4 w-4 mr-xs text-tertiary" /> Selesaikan Tiket
                       </>
                     ) : (
                       <>
@@ -315,7 +315,7 @@ export default function HelpdeskInboxPage() {
               <div className="p-md border-t border-outline-variant bg-surface-container-lowest">
                 {activeTicket.status === 'SELESAI' ? (
                   <div className="flex items-center gap-xs p-sm bg-outline-variant/15 border border-outline-variant rounded-md justify-center text-body-sm text-on-surface-variant">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" /> Tiket ini telah ditandai sebagai Selesai. Buka kembali tiket untuk mengirim balasan.
+                    <CheckCircle2 className="h-4 w-4 text-tertiary" /> Tiket ini telah ditandai sebagai Selesai. Buka kembali tiket untuk mengirim balasan.
                   </div>
                 ) : (
                   <form onSubmit={handleSendReply} className="flex gap-sm items-end">

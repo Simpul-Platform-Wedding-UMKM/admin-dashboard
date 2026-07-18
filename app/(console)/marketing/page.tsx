@@ -45,7 +45,7 @@ export default function MarketingFeaturedPage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background animate-fade-in">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background animate-fade-in">
         <div className="flex flex-col items-center justify-center gap-md py-xl">
           <AlertCircle className="w-12 h-12 text-error" />
           <p className="text-body-md text-on-surface-variant">{error}</p>
@@ -56,7 +56,7 @@ export default function MarketingFeaturedPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Pemasaran & Slot Unggulan</h1>
         <p className="text-body-md text-on-surface-variant">Kelola penempatan vendor premium, slot promosi, dan status keunggulan mitra.</p>

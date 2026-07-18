@@ -190,7 +190,7 @@ export default function DisputeMediationPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
         <Skeleton className="h-6 w-32 mb-xs" />
         <Skeleton className="h-10 w-96 mb-md" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-md">
@@ -225,7 +225,7 @@ export default function DisputeMediationPage() {
   const vendorNet = vendorGross - platformFee - microFee
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       {/* Navigation Header */}
       <div className="flex items-center gap-xs">
         <Link href="/disputes" className="text-label-md text-on-surface-variant hover:text-on-surface flex items-center transition-colors">

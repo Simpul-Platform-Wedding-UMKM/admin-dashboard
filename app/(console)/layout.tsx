@@ -15,7 +15,7 @@ export default function DashboardLayout({
       style={
         {
           "--sidebar-width": "18rem",
-          "--header-height": "3rem",
+          "--header-height": "3.5rem",
         } as React.CSSProperties
       }
     >

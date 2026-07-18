@@ -59,7 +59,7 @@ export default function OverviewPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
         <div className="flex flex-col gap-sm">
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-4 w-96" />
@@ -99,7 +99,7 @@ export default function OverviewPage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <div className="flex items-start gap-md">
             <AlertCircle className="w-6 h-6 text-error mt-0.5" />
@@ -135,7 +135,7 @@ export default function OverviewPage() {
   ]
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       <div className="flex flex-col gap-sm">
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Ikhtisar Dasbor</h1>
         <p className="text-body-md text-on-surface-variant">Pantau kinerja platform dan metrik keuangan utama secara real-time</p>
@@ -231,7 +231,7 @@ export default function OverviewPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-md">
           <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
             <p className="text-label-sm text-on-surface-variant mb-xs">Uptime Sistem</p>
-            <p className="text-headline-lg text-green-600 font-bold">99.98%</p>
+            <p className="text-headline-lg text-tertiary font-bold">99.98%</p>
           </div>
           <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
             <p className="text-label-sm text-on-surface-variant mb-xs">Waktu Respon Rata-rata</p>

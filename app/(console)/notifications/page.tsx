@@ -125,7 +125,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       {/* Title Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-sm border-b border-outline-variant pb-md">
         <div>
@@ -206,7 +206,7 @@ export default function NotificationsPage() {
             const colorClass = notif.type === 'WARNING'
               ? 'text-warning bg-warning/10 border-warning/20'
               : notif.type === 'SUCCESS'
-                ? 'text-green-600 bg-green-50 border-green-200'
+                ? 'text-tertiary bg-tertiary-container/20 border-tertiary-container'
                 : 'text-primary bg-primary/5 border-primary/10'
 
             return (

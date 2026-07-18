@@ -38,7 +38,7 @@ export default function AIAnalyticsPage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Analisis AI</h1>
           <p className="text-body-md text-on-surface-variant">Pantau hasil analisis kecerdasan buatan (AI Assistant) dan kueri pertanyaan vendor.</p>
@@ -60,7 +60,7 @@ export default function AIAnalyticsPage() {
   const avgTokensPerQuery = totalQueries > 0 ? (totalTokens / totalQueries).toFixed(0) : '0'
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background animate-fade-in">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-sm">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold flex items-center gap-xs">

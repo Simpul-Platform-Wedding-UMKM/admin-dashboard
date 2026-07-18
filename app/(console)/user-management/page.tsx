@@ -52,7 +52,7 @@ export default function UserRoleManagementPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-sm">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Manajemen Pengguna & Peran</h1>

@@ -13,7 +13,8 @@ import {
   ComplianceCheck,
   AIAnalyticsLog,
   ComplianceCategory,
-  RiskLevel
+  RiskLevel,
+  VerificationLog
 } from './types'
 
 // Mock document links (using high-quality placeholders for KTP, NPWP, SIUP, MOU)
@@ -404,12 +405,39 @@ const INITIAL_AI_ANALYTICS_LOGS: AIAnalyticsLog[] = [
     tokensUsed: 310,
     confidence: 0.92,
     createdAt: '2026-07-14T11:00:00Z'
+    }
+  ];
+
+  // Mock Verification Logs (admin approval history)
+  export interface ExtendedVerificationLog extends VerificationLog {
+    adminName: string;
   }
-];
 
+  const INITIAL_VERIFICATION_LOGS: ExtendedVerificationLog[] = [
+    // vendor-3: Approved history
+    {
+      id: 'vlog-1',
+      vendorId: 'vendor-3',
+      adminId: 'admin-2',
+      adminName: 'Sarah Admin',
+      action: 'APPROVE',
+      notes: 'Dokumen lengkap dan valid. Tidak ada masalah.',
+      createdAt: '2026-05-10T14:22:00Z',
+    },
+    // vendor-4: Rejected history
+    {
+      id: 'vlog-2',
+      vendorId: 'vendor-4',
+      adminId: 'admin-1',
+      adminName: 'Rina Moderator',
+      action: 'REJECT',
+      reason: 'Foto KTP buram dan dokumen SIUP kadaluarsa',
+      rejectedDocuments: ['ktp', 'siup'],
+      createdAt: '2026-07-03T09:15:00Z',
+    },
+  ];
 
-
-// ponytail: Helper to get item from local storage or fallback to default
+  // ponytail: Helper to get item from local storage or fallback to default
 // Known limit: Client-side only. Standard mock fallback on server rendering.
 function getStorageItem<T>(key: string, fallback: T): T {
   if (typeof window === 'undefined') return fallback;
@@ -487,6 +515,13 @@ class LocalDatabase {
   }
   set aiAnalyticsLogs(data: AIAnalyticsLog[]) {
     setStorageItem('simpul_mock_ai_analytics_logs', data);
+  }
+
+  get verificationLogs(): ExtendedVerificationLog[] {
+    return getStorageItem('simpul_mock_verification_logs', INITIAL_VERIFICATION_LOGS);
+  }
+  set verificationLogs(data: ExtendedVerificationLog[]) {
+    setStorageItem('simpul_mock_verification_logs', data);
   }
 }
 
@@ -589,6 +624,25 @@ export const dummyDb = {
   // AI Analytics Logs
   getAIAnalyticsLogs: (): AIAnalyticsLog[] => {
     return db.aiAnalyticsLogs;
+  },
+
+  // Verification Log Services
+  getVerificationLogs: (vendorId?: string): ExtendedVerificationLog[] => {
+    const logs = db.verificationLogs;
+    if (vendorId) return logs.filter(l => l.vendorId === vendorId);
+    return logs;
+  },
+
+  addVerificationLog: (log: Omit<ExtendedVerificationLog, 'id' | 'createdAt'>): ExtendedVerificationLog => {
+    const logs = db.verificationLogs;
+    const newLog: ExtendedVerificationLog = {
+      ...log,
+      id: `vlog-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+    };
+    logs.push(newLog);
+    db.verificationLogs = logs;
+    return newLog;
   },
 
   // Heatmap Services

@@ -121,11 +121,11 @@ export default function QrisHeatmapPage() {
   }, [])
 
   // Color mapper based on transaction count density
-  const getDensityColor = (count: number) => {
-    if (count >= 35) return '#ef4444' // Red - Very High
-    if (count >= 20) return '#f97316' // Orange - High
-    if (count >= 10) return '#eab308' // Yellow - Medium
-    return '#10b981' // Green/Teal - Low
+  const getDensityColorHex = (count: number) => {
+    if (count >= 35) return 'var(--md-sys-color-error)' // Very High
+    if (count >= 20) return 'var(--md-sys-color-tertiary-fixed)' // High
+    if (count >= 10) return 'var(--md-sys-color-tertiary-fixed-dim)' // Medium
+    return 'var(--md-sys-color-tertiary)' // Low
   }
 
   // Calculate filtered stats
@@ -168,12 +168,12 @@ export default function QrisHeatmapPage() {
         points.forEach((point) => {
           // Circle radius is proportional to the count (minimum 8px, scaled)
           const radius = Math.max(8, Math.min(30, point.count * 0.8))
-          const color = getDensityColor(point.count)
+          const color = getDensityColorHex(point.count)
 
           const circle = L.circleMarker([point.latitude, point.longitude], {
             radius: radius,
             fillColor: color,
-            color: '#ffffff',
+            color: 'var(--md-sys-color-surface)',
             weight: 1.5,
             opacity: 0.9,
             fillOpacity: 0.65
@@ -210,7 +210,7 @@ export default function QrisHeatmapPage() {
   }, [loading, points, selectedKecamatan])
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
       {/* Title Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md pb-xs border-b border-outline-variant">
         <div>
@@ -286,19 +286,19 @@ export default function QrisHeatmapPage() {
             <h4 className="text-label-sm text-on-surface font-semibold uppercase mb-sm pb-xs border-b border-outline-variant">Tingkat Kepadatan Trx</h4>
             <div className="space-y-xs">
               <div className="flex items-center gap-sm">
-                <span className="inline-block h-3.5 w-3.5 rounded-full" style={{ backgroundColor: '#ef4444' }}></span>
+                <span className="inline-block h-3.5 w-3.5 rounded-full bg-error"></span>
                 <span className="text-label-md text-on-surface-variant">Sangat Padat (&ge; 35 kali)</span>
               </div>
               <div className="flex items-center gap-sm">
-                <span className="inline-block h-3.5 w-3.5 rounded-full" style={{ backgroundColor: '#f97316' }}></span>
+                <span className="inline-block h-3.5 w-3.5 rounded-full bg-tertiary-fixed"></span>
                 <span className="text-label-md text-on-surface-variant">Padat (&ge; 20 kali)</span>
               </div>
               <div className="flex items-center gap-sm">
-                <span className="inline-block h-3.5 w-3.5 rounded-full" style={{ backgroundColor: '#eab308' }}></span>
+                <span className="inline-block h-3.5 w-3.5 rounded-full bg-tertiary-fixed-dim"></span>
                 <span className="text-label-md text-on-surface-variant">Sedang (&ge; 10 kali)</span>
               </div>
               <div className="flex items-center gap-sm">
-                <span className="inline-block h-3.5 w-3.5 rounded-full" style={{ backgroundColor: '#10b981' }}></span>
+                <span className="inline-block h-3.5 w-3.5 rounded-full bg-tertiary"></span>
                 <span className="text-label-md text-on-surface-variant">Rendah (&lt; 10 kali)</span>
               </div>
             </div>

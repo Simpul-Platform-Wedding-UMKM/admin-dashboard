@@ -38,7 +38,7 @@ export default function DisputeResolutionPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Dispute Resolution</h1>
           <p className="text-body-md text-on-surface-variant">Manage and resolve customer disputes with vendors</p>
@@ -90,7 +90,7 @@ export default function DisputeResolutionPage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Dispute Resolution</h1>
           <p className="text-body-md text-on-surface-variant">Manage and resolve customer disputes with vendors</p>
@@ -108,7 +108,7 @@ export default function DisputeResolutionPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-md p-md md:p-lg">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface">Dispute Resolution</h1>
         <p className="text-body-md text-on-surface-variant">Manage and resolve customer disputes with vendors</p>
