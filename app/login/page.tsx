@@ -2,9 +2,8 @@
 
 import { useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Loader2, HeartHandshake, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff, Loader2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { loginWithEmailPassword } from '@/lib/services/auth'
@@ -44,143 +43,169 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col bg-[#FBF7F6] lg:flex-row">
-      {/* ── Branding panel (kanan, desktop) ─────────────────────────────── */}
-      <div className="relative hidden lg:flex flex-col items-center justify-center gap-5 overflow-hidden px-6 py-12 text-center lg:order-2 lg:w-[45%] lg:py-0">
-        {/* Soft dusty-rose gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#F3DEDC] via-[#EBCBC8] to-[#DDB3AF] -z-0" />
-        <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/30 blur-3xl -z-0" />
-        <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-primary/10 blur-3xl -z-0" />
+    <main className="flex min-h-dvh w-full items-center justify-center bg-[#FAF8F7] p-0 sm:p-6 lg:p-10 font-sans selection:bg-[#8B5A5A]/15 selection:text-[#8B5A5A]">
+      {/* ── Auth Card — 16:9 on sm+ screens, natural height on mobile ── */}
+      <div className="relative flex w-full max-w-6xl flex-col overflow-hidden bg-white sm:aspect-video sm:max-h-[calc(100dvh-5rem)] sm:flex-row sm:rounded-2xl sm:shadow-xl sm:border sm:border-neutral-100">
 
-        <div className="relative flex h-16 w-16 items-center justify-center rounded-xl bg-white/70 backdrop-blur-sm font-heading text-headline-lg font-bold text-primary shadow-sm lg:h-20 lg:w-20">
-          S
-        </div>
-        <div className="relative space-y-2">
-          <h1 className="font-heading text-headline-md font-semibold text-[#3E2A2A] lg:text-headline-lg">
-            SIMPUL Admin Console
-          </h1>
-          <p className="mx-auto hidden max-w-sm text-body-md leading-relaxed text-[#5C4342]/80 lg:block">
-            Kelola ekosistem wedding digital Anda — vendor, transaksi, dan kepercayaan pelanggan dalam satu tempat.
-          </p>
-        </div>
+        {/* ═══ LEFT PANEL: Logo & Brand (hidden on mobile, shown ≥ sm) ═══ */}
+        <div className="relative hidden sm:flex sm:w-[46%] lg:w-[50%] shrink-0 flex-col items-center justify-center overflow-hidden bg-neutral-950">
+          {/* Background photo */}
+          <img
+            src="/images/wedding-bg.jpg"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-80"
+          />
+          {/* Brand gradient overlay for legibility & tone consistency */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#3a1f1f]/80 via-[#5a3333]/55 to-[#8B5A5A]/70" />
 
-        {/* Feature hints — subtle, premium */}
-        <div className="relative hidden w-full max-w-sm flex-col gap-3 lg:flex">
-          {[
-            { icon: HeartHandshake, text: 'Verifikasi vendor & kurasi pasar' },
-            { icon: ShieldCheck, text: 'Bagi hasil & settlement transparan' },
-            { icon: Sparkles, text: 'Wawasan pasar real-time' },
-          ].map(({ icon: Icon, text }) => (
-            <div
-              key={text}
-              className="flex items-center gap-3 rounded-xl bg-white/50 px-4 py-3 text-left backdrop-blur-sm"
-            >
-              <Icon className="h-5 w-5 shrink-0 text-primary" />
-              <span className="text-body-sm text-[#4A3433]">{text}</span>
+          {/* Logo card */}
+          <div className="relative z-10 flex flex-col items-center gap-6 px-8">
+            <div className="rounded-2xl bg-white/95 px-8 py-6 shadow-lg backdrop-blur-sm">
+              <img
+                src="/images/logo.png"
+                alt="SIMPUL"
+                className="h-9 w-auto object-contain lg:h-11"
+              />
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Login form (kiri) ───────────────────────────────────────────── */}
-      <div className="flex flex-1 items-center justify-center bg-white px-6 py-12 lg:px-12">
-        <div className="w-full max-w-md">
-          {/* Brand mark — mobile only */}
-          <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary font-heading text-lg font-bold text-primary-foreground">
-              S
+            <div className="space-y-1.5 text-center">
+              <p className="text-[10px] tracking-widest uppercase font-semibold text-white/70">
+                SIMPUL Wedding Ecosystem
+              </p>
+              <p className="font-heading text-lg lg:text-xl font-bold text-white tracking-tight max-w-[280px]">
+                Admin Dashboard
+              </p>
             </div>
-            <div className="font-heading text-lg font-bold text-on-surface">SIMPUL Admin</div>
+          </div>
+        </div>
+
+        {/* ═══ RIGHT PANEL: Form Area ═══ */}
+        <div className="flex flex-1 flex-col overflow-y-auto bg-white px-6 py-8 sm:px-8 sm:py-8 md:px-12 md:py-10 lg:px-16">
+
+          {/* Mobile-only compact logo header */}
+          <div className="mb-8 flex items-center justify-center sm:hidden">
+            <img src="/images/logo.png" alt="SIMPUL" className="h-8 w-auto object-contain" />
           </div>
 
-          <div className="rounded-xl border border-neutral-100 bg-white p-6 sm:p-8 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
-            <div className="space-y-1.5">
-              <h2 className="font-heading text-headline-md font-bold text-on-surface">Selamat datang kembali</h2>
-              <p className="text-body-md text-on-surface-variant">
-                Masuk ke akun Admin Console SIMPUL Anda
+          {/* Center Content Section */}
+          <div className="my-auto w-full max-w-[420px] mx-auto">
+            {/* Headline */}
+            <div className="mb-8 space-y-2">
+              <h1 className="font-heading text-2xl sm:text-3xl lg:text-[34px] font-black tracking-tight text-[#1A1515] leading-[1.1] uppercase">
+                KELOLA<br />
+                EKOSISTEM WEDDING<br />
+                ANDA
+              </h1>
+              <p className="text-xs sm:text-sm text-neutral-500 font-normal leading-relaxed">
+                Masuk ke akun admin untuk mengelola ekosistem platform.
               </p>
             </div>
 
-            {/* Form-level error — soft, elegant */}
+            {/* Form Error Banner */}
             {formError && (
               <div
                 role="alert"
-                className="mt-6 flex items-start gap-3 rounded-xl border border-error/25 bg-error-container/40 px-4 py-3 text-body-sm text-on-error-container"
+                className="mb-6 flex items-center gap-3 border-l-2 border-rose-600 bg-rose-50/70 px-4 py-3 text-xs font-medium text-rose-900 animate-in fade-in duration-200"
               >
-                <AlertCircle className="h-5 w-5 shrink-0 text-error mt-0.5" />
+                <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                 <span>{formError}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-body-sm font-semibold text-on-surface">
-                  Email
+            {/* Underline Minimalist Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email Field */}
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-[11px] font-semibold tracking-widest uppercase text-neutral-500">
+                  EMAIL ADMIN
                 </Label>
-                <Input
+                <input
                   id="email"
                   type="email"
                   autoComplete="email"
-                  placeholder="admin@simpul.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   aria-invalid={Boolean(fieldErrors.email)}
-                  className="h-12 rounded-xl border-neutral-200 bg-white px-4 text-body-md placeholder:text-muted-foreground focus-visible:ring-primary/20 focus-visible:border-primary"
+                  className="h-11 w-full rounded-none border-b-2 border-t-0 border-l-0 border-r-0 border-neutral-300 bg-transparent px-0 text-sm font-medium text-neutral-900 focus:border-[#8B5A5A] focus:outline-none transition-colors duration-200"
                 />
                 {fieldErrors.email && (
-                  <p className="text-label-sm text-error">{fieldErrors.email}</p>
+                  <p className="text-xs font-medium text-rose-600 mt-1">{fieldErrors.email}</p>
                 )}
               </div>
 
-              <div className="space-y-2">
+              {/* Password Field with Inline 'Lupa password?' */}
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-body-sm font-semibold text-on-surface">
-                    Password
+                  <Label htmlFor="password" className="text-[11px] font-semibold tracking-widest uppercase text-neutral-500">
+                    PASSWORD
                   </Label>
-                  <span className="text-label-sm text-on-surface-variant/70">Lupa password?</span>
+                  <button
+                    type="button"
+                    className="text-xs font-medium text-neutral-400 hover:text-[#8B5A5A] transition-colors cursor-pointer"
+                    onClick={() => {}}
+                  >
+                    Lupa password?
+                  </button>
                 </div>
                 <div className="relative">
-                  <Input
+                  <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
-                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     aria-invalid={Boolean(fieldErrors.password)}
-                    className="h-12 rounded-xl border-neutral-200 bg-white pr-12 text-body-md placeholder:text-muted-foreground focus-visible:ring-primary/20 focus-visible:border-primary"
+                    className="h-11 w-full rounded-none border-b-2 border-t-0 border-l-0 border-r-0 border-neutral-300 bg-transparent px-0 pr-10 text-sm font-medium text-neutral-900 focus:border-[#8B5A5A] focus:outline-none transition-colors duration-200"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((v) => !v)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant transition-colors hover:text-on-surface"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors hover:text-neutral-700 p-1"
                     aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
                 {fieldErrors.password && (
-                  <p className="text-label-sm text-error">{fieldErrors.password}</p>
+                  <p className="text-xs font-medium text-rose-600 mt-1">{fieldErrors.password}</p>
                 )}
               </div>
 
-              <div className="flex items-center gap-2.5">
-                <Checkbox id="remember" checked={rememberMe} onCheckedChange={(v) => setRememberMe(v === true)} />
-                <Label htmlFor="remember" className="cursor-pointer text-body-sm font-normal text-on-surface-variant">
-                  Ingat saya
+              {/* Custom Checkbox "Ingat sesi login saya" */}
+              <div className="flex items-center gap-2.5 pt-1">
+                <Checkbox
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(v) => setRememberMe(v === true)}
+                  className="h-4 w-4 rounded-[4px] border-neutral-300 data-[state=checked]:bg-[#8B5A5A] data-[state=checked]:border-[#8B5A5A]"
+                />
+                <Label htmlFor="remember" className="cursor-pointer text-xs font-normal text-neutral-600 select-none">
+                  Ingat sesi login saya
                 </Label>
               </div>
 
+              {/* Solid Dark Maroon Submit Button */}
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="h-12 w-full rounded-xl bg-primary text-body-lg font-semibold shadow-sm transition-all hover:bg-primary/90 hover:shadow-md disabled:opacity-70"
+                className="h-15 w-full rounded-md bg-[#8B5A5A] hover:bg-[#774949] active:scale-[0.99] text-white text-xs font-bold tracking-widest uppercase shadow-xs transition-all duration-200 disabled:opacity-60 cursor-pointer"
               >
-                {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-                Masuk
+                {isSubmitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-white" />
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    Masuk ke Console
+                    <ArrowRight className="h-4 w-4 opacity-80" />
+                  </span>
+                )}
               </Button>
             </form>
           </div>
+
+          {/* Minimal Footer */}
+          <footer className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-neutral-100 pt-4 text-[11px] text-neutral-400">
+            <span>&copy; {new Date().getFullYear()} SIMPUL Wedding Platform</span>
+          </footer>
         </div>
       </div>
     </main>

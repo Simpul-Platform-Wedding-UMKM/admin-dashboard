@@ -268,7 +268,6 @@
 
   button:focus-visible,
   a:focus-visible,
-  input:focus-visible,
   [role='button']:focus-visible {
     @apply outline-none ring-2 ring-offset-2 ring-offset-white;
     --tw-ring-color: rgba(129, 82, 82, 0.45);
