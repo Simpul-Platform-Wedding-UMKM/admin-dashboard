@@ -20,11 +20,12 @@ export async function loginWithEmailPassword(
     })
 
     setToken(res.token)
+    const account = res.account as any
     setSession({
-      id: res.account.id,
-      email: res.account.email,
-      name: res.account.name,
-      role: res.account.role,
+      id: account.id,
+      email: account.email,
+      name: account.fullName ?? account.name ?? '',
+      role: account.role,
     }, true)
 
     return { success: true }

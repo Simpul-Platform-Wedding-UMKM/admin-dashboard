@@ -12,9 +12,9 @@ function getToken(): string | null {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? ''
 
-// ponytail: Force mock mode to true for Phase 1 local visual simulation.
-// To connect to a real backend later, change this to false or use process.env.NEXT_PUBLIC_USE_MOCK.
-const SHOULD_MOCK = true
+// ponytail: Mock mode hanya dipakai saat NEXT_PUBLIC_USE_MOCK=true (dev visual).
+// Default false — admin dashboard terhubung ke backend real.
+const SHOULD_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === 'true'
 
 export class ApiError extends Error {
   status: number
@@ -234,7 +234,16 @@ export async function apiFetch<T>(
   })
 
   if (!res.ok) {
-    throw new ApiError(res.status, `API error ${res.status}: ${res.statusText}`)
+    // Coba ambil pesan error dari body backend ({ error: "..." }) — lebih
+    // informatif daripada statusText generik untuk demo & debugging.
+    let message = `API error ${res.status}: ${res.statusText}`
+    try {
+      const body = await res.json()
+      if (body?.error) message = String(body.error)
+    } catch {
+      // body bukan JSON — pakai pesan default
+    }
+    throw new ApiError(res.status, message)
   }
 
   return res.json()

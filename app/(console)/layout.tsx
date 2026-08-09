@@ -14,7 +14,7 @@ export default function DashboardLayout({
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "18rem",
+          "--sidebar-width": "16rem",
           "--header-height": "3.5rem",
         } as React.CSSProperties
       }
@@ -22,9 +22,13 @@ export default function DashboardLayout({
       <AppSidebar variant="sidebar" />
       <SidebarInset>
         <SiteHeader />
+        {/* Main content: max-width + auto margin — no horizontal page scroll.
+            Padding diatur per-halaman (p-lg md:p-xl) supaya tidak dobel. */}
         <div className="flex flex-1 flex-col overflow-hidden">
           <div className="flex-1 overflow-auto">
-            {children}
+            <div className="mx-auto w-full max-w-[1280px]">
+              {children}
+            </div>
           </div>
         </div>
       </SidebarInset>

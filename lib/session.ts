@@ -16,10 +16,18 @@ export interface SessionUser {
   role: AccountRole
 }
 
+// Cookie attributes: Secure (HTTPS prod) + SameSite=Lax (anti-CSRF).
+// HttpOnly tidak bisa dipakai karena token dibaca JS client-side (api.ts);
+// trade-off dicatat di docs/DEPLOY_SECURITY.md.
+const COOKIE_ATTRS =
+  typeof window !== 'undefined' && window.location.protocol === 'https:'
+    ? '; Secure; SameSite=Lax'
+    : '; SameSite=Lax'
+
 export function setSession(user: SessionUser, remember: boolean) {
   const value = encodeURIComponent(JSON.stringify(user))
   const maxAge = remember ? 60 * 60 * 24 * 30 : undefined // 30 days, or browser-session cookie
-  document.cookie = `${SESSION_COOKIE}=${value}; path=/${maxAge ? `; max-age=${maxAge}` : ''}`
+  document.cookie = `${SESSION_COOKIE}=${value}; path=/${maxAge ? `; max-age=${maxAge}` : ''}${COOKIE_ATTRS}`
 }
 
 export function getSession(): SessionUser | null {
@@ -40,8 +48,12 @@ export function clearSession() {
 
 export const TOKEN_COOKIE = 'simpul_token'
 
+// JWT disimpan 12 jam (lebih pendek dari expiry 7d di backend) — mengurangi
+// jendela paparan jika token bocor.
+const TOKEN_MAX_AGE = 60 * 60 * 12
+
 export function setToken(token: string) {
-  document.cookie = `${TOKEN_COOKIE}=${encodeURIComponent(token)}; path=/; max-age=${60 * 60 * 24}` // 24h
+  document.cookie = `${TOKEN_COOKIE}=${encodeURIComponent(token)}; path=/; max-age=${TOKEN_MAX_AGE}${COOKIE_ATTRS}`
 }
 
 export function getToken(): string | null {

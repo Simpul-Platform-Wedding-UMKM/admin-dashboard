@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -67,14 +67,27 @@ export default function KYBVerificationPage() {
     fetchData()
   }, [fetchData])
 
-  // ── Derived data ──────────────────────────────────────────────────────────
-  const pending = verifications.filter(v => v.status === 'PENDING')
-  const verified = verifications.filter(v => v.status === 'VERIFIED')
-  const rejected = verifications.filter(v => v.status === 'REJECTED')
+  // ── Derived data (memoized — tab switch tidak re-render seluruh page) ──
+  const pending = useMemo(
+    () => verifications.filter(v => v.status === 'PENDING'),
+    [verifications],
+  )
+  const verified = useMemo(
+    () => verifications.filter(v => v.status === 'VERIFIED'),
+    [verifications],
+  )
+  const rejected = useMemo(
+    () => verifications.filter(v => v.status === 'REJECTED'),
+    [verifications],
+  )
 
-  const filtered = activeTab === 'all'
-    ? verifications
-    : verifications.filter(v => v.status === activeTab)
+  const filtered = useMemo(
+    () =>
+      activeTab === 'all'
+        ? verifications
+        : verifications.filter(v => v.status === activeTab),
+    [verifications, activeTab],
+  )
 
   // ── Error State ───────────────────────────────────────────────────────────
   if (error) {

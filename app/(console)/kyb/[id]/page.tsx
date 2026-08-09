@@ -43,8 +43,34 @@ import {
   ShieldX,
 } from 'lucide-react'
 import { formatDate, formatDateTime, getRelativeTime, getBadgeClass } from '@/lib/utils-simpul'
-import type { ExtendedVendor } from '@/lib/dummyData'
 import type { VerificationLog } from '@/lib/types'
+
+// Shape response GET /admin/vendor-verifications/:id dari backend
+interface KybVendorDetail {
+  id: string
+  vendorId: string
+  businessName: string
+  businessType: string
+  region: string
+  status: 'UNSUBMITTED' | 'PENDING' | 'VERIFIED' | 'REJECTED'
+  kybVerified: boolean
+  kycVerifiedAt?: string
+  rejectionReason?: string
+  submittedAt?: string
+  name: string
+  email: string
+  address: string
+  phone: string
+  bankName: string
+  bankCode: string
+  bankAccountNumber: string
+  bankAccountName: string
+  ktpUrl: string
+  npwpUrl: string
+  siupUrl: string
+  mouUrl: string
+  createdAt: string
+}
 
 // ── Document Tab Config ─────────────────────────────────────────────────────
 const DOC_TABS = [
@@ -69,7 +95,7 @@ const REJECTABLE_DOCS = [
 function getStatusBadge(status: string) {
   const cls = getBadgeClass(status)
   const labels: Record<string, string> = {
-    'ACTIVE': 'TERVERIFIKASI',
+    'VERIFIED': 'TERVERIFIKASI',
     'REJECTED': 'DITOLAK',
     'PENDING': 'MENUNGGU',
   }
@@ -85,7 +111,7 @@ export default function KYBDetailsPage() {
   const id = params?.id as string
 
   // ── State ──────────────────────────────────────────────────────────────
-  const [vendor, setVendor] = useState<ExtendedVendor | null>(null)
+  const [vendor, setVendor] = useState<KybVendorDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
@@ -127,13 +153,13 @@ export default function KYBDetailsPage() {
   }, [id])
 
   // ── Actions ─────────────────────────────────────────────────────────────
-  const isProcessed = vendor?.status === 'ACTIVE' || vendor?.status === 'REJECTED'
+  const isProcessed = vendor?.status === 'VERIFIED' || vendor?.status === 'REJECTED'
 
   const handleApprove = async () => {
     setActionLoading(true)
     try {
       await approveVerification(id, approveNotes.trim() || undefined)
-      setVendor(prev => prev ? { ...prev, status: 'ACTIVE' as any, kycVerified: true, kycVerifiedAt: new Date().toISOString() } : null)
+      setVendor(prev => prev ? { ...prev, status: 'VERIFIED' as any, kycVerified: true, kycVerifiedAt: new Date().toISOString() } : null)
       setIsApproveOpen(false)
       setApproveNotes('')
       // Refresh logs
@@ -171,7 +197,7 @@ export default function KYBDetailsPage() {
     setActionLoading(true)
     try {
       await rejectVerification(id, rejectReason.trim(), selectedDocs)
-      setVendor(prev => prev ? { ...prev, status: 'REJECTED' as any, kycVerified: false, rejectionReason: rejectReason.trim() } as ExtendedVendor : null)
+      setVendor(prev => prev ? { ...prev, status: 'REJECTED' as any, kybVerified: false, rejectionReason: rejectReason.trim() } : null)
       setIsRejectOpen(false)
       setRejectReason('')
       setRejectedDocs({})
@@ -317,7 +343,7 @@ export default function KYBDetailsPage() {
       )}
 
       {/* ── Verified Alert ─────────────────────────────────────────────── */}
-      {vendor.status === 'ACTIVE' && (
+      {vendor.status === 'VERIFIED' && (
         <Card className="p-md bg-tertiary-container/20 border border-tertiary-container flex gap-sm items-start">
           <ShieldCheck className="h-5 w-5 text-tertiary mt-0.5 shrink-0" />
           <div>

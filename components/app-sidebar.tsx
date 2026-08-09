@@ -115,13 +115,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:!p-1.5 h-14"
             >
               <a href="/dashboard">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-semibold">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground font-semibold text-lg shadow-sm">
                   S
                 </div>
-                <span className="font-heading text-base font-semibold">SIMPUL</span>
+                <span className="flex flex-col leading-tight">
+                  <span className="font-heading text-lg font-bold">SIMPUL</span>
+                  <span className="text-xs text-on-surface-variant font-normal">
+                    Admin Platform
+                  </span>
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
