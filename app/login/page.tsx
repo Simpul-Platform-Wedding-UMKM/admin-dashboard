@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Loader2, HeartHandshake, ShieldCheck, Sparkles } from 'lucide-react'
+import { Eye, EyeOff, Loader2, HeartHandshake, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -46,7 +46,7 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-dvh flex-col bg-[#FBF7F6] lg:flex-row">
       {/* ── Branding panel (kanan, desktop) ─────────────────────────────── */}
-      <div className="relative flex flex-col items-center justify-center gap-5 overflow-hidden px-6 py-12 text-center lg:order-2 lg:w-[45%] lg:py-0">
+      <div className="relative hidden lg:flex flex-col items-center justify-center gap-5 overflow-hidden px-6 py-12 text-center lg:order-2 lg:w-[45%] lg:py-0">
         {/* Soft dusty-rose gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#F3DEDC] via-[#EBCBC8] to-[#DDB3AF] -z-0" />
         <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/30 blur-3xl -z-0" />
@@ -75,7 +75,7 @@ export default function LoginPage() {
               key={text}
               className="flex items-center gap-3 rounded-xl bg-white/50 px-4 py-3 text-left backdrop-blur-sm"
             >
-              <Icon className="h-4 w-4 shrink-0 text-primary" />
+              <Icon className="h-5 w-5 shrink-0 text-primary" />
               <span className="text-body-sm text-[#4A3433]">{text}</span>
             </div>
           ))}
@@ -93,7 +93,7 @@ export default function LoginPage() {
             <div className="font-heading text-lg font-bold text-on-surface">SIMPUL Admin</div>
           </div>
 
-          <div className="rounded-2xl border border-[#EBDCDA] bg-white p-8 shadow-[0_8px_40px_rgba(129,82,82,0.08)] md:p-10">
+          <div className="rounded-2xl border border-[#EBDCDA] bg-white p-6 sm:p-8 md:p-10 shadow-[0_8px_40px_rgba(129,82,82,0.08)]">
             <div className="space-y-1.5">
               <h2 className="font-heading text-headline-md font-bold text-on-surface">Selamat datang kembali</h2>
               <p className="text-body-md text-on-surface-variant">
@@ -105,9 +105,9 @@ export default function LoginPage() {
             {formError && (
               <div
                 role="alert"
-                className="mt-6 flex items-start gap-2.5 rounded-lg border border-error/25 bg-error-container/40 px-4 py-3 text-body-sm text-on-error-container"
+                className="mt-6 flex items-start gap-3 rounded-xl border border-error/25 bg-error-container/40 px-4 py-3 text-body-sm text-on-error-container"
               >
-                <span className="mt-0.5 text-error">⚠</span>
+                <AlertCircle className="h-5 w-5 shrink-0 text-error mt-0.5" />
                 <span>{formError}</span>
               </div>
             )}
@@ -156,7 +156,7 @@ export default function LoginPage() {
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant transition-colors hover:text-on-surface"
                     aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                   >
-                    {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
                 </div>
                 {fieldErrors.password && (
@@ -176,7 +176,7 @@ export default function LoginPage() {
                 disabled={isSubmitting}
                 className="h-12 w-full rounded-xl bg-primary text-body-lg font-semibold shadow-sm transition-all hover:bg-primary/90 hover:shadow-md disabled:opacity-70"
               >
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isSubmitting && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
                 Masuk
               </Button>
             </form>

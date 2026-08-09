@@ -52,7 +52,7 @@ export default function UserRoleManagementPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-sm">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Manajemen Pengguna & Peran</h1>
@@ -107,7 +107,7 @@ export default function UserRoleManagementPage() {
       )}
 
       {/* Users Table */}
-      <Card className="p-md bg-surface-container-lowest border border-outline-variant">
+      <Card className="p-md bg-surface-container-lowest border border-outline-variant w-full max-w-full overflow-hidden">
         <h2 className="text-headline-md text-on-surface font-semibold mb-md">Daftar Pengguna Sistem</h2>
         <div className="overflow-x-auto w-full">
           <table className="w-full min-w-[700px]">

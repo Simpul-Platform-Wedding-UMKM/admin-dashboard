@@ -40,7 +40,7 @@ export default function TransactionsPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl w-full max-w-full overflow-hidden">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Transactions & Payment Splits</h1>
           <p className="text-body-md text-on-surface-variant">Track all payment splits with fee breakdown and QRIS codes</p>
@@ -93,7 +93,7 @@ export default function TransactionsPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl w-full max-w-full overflow-hidden">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface">Transactions & Payment Splits</h1>
         <p className="text-body-md text-on-surface-variant">Track all payment splits with fee breakdown and QRIS codes</p>
@@ -120,10 +120,10 @@ export default function TransactionsPage() {
       </div>
 
       {/* Table */}
-      <Card className="p-md bg-surface-container-lowest border border-outline-variant">
+      <Card className="p-md bg-surface-container-lowest border border-outline-variant w-full max-w-full overflow-hidden">
         <h2 className="text-headline-md text-on-surface font-semibold mb-md">Payment Splits</h2>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[800px] text-sm">
             <thead>
               <tr className="border-b border-outline-variant">
                 <th className="sticky left-0 z-10 bg-surface-container-lowest text-left p-md text-label-md text-on-surface font-semibold">Transaction ID</th>

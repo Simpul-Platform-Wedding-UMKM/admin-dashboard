@@ -42,7 +42,7 @@ export default function VendorManagementPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl w-full max-w-full overflow-hidden">
         <div className="flex flex-col gap-sm mb-md">
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-5 w-80" />
@@ -101,7 +101,7 @@ export default function VendorManagementPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl w-full max-w-full overflow-hidden">
       <div className="flex flex-col gap-sm mb-md">
         <h1 className="font-heading text-headline-lg text-on-surface">Vendor Management</h1>
         <p className="text-body-md text-on-surface-variant">Monitor, approve, and manage all vendor accounts</p>
@@ -142,11 +142,11 @@ export default function VendorManagementPage() {
       </Card>
 
       {/* Vendors Table */}
-      <Card className="p-md bg-surface-container-lowest border border-outline-variant">
+      <Card className="p-md bg-surface-container-lowest border border-outline-variant w-full max-w-full overflow-hidden">
         <h2 className="text-headline-md text-on-surface font-semibold mb-md">All Vendors ({filteredVendors.length})</h2>
         
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[900px]">
             <thead>
               <tr className="border-b border-outline-variant">
                 <th className="sticky left-0 z-10 bg-surface-container-lowest text-left p-md text-label-md text-on-surface font-semibold">Vendor Name</th>

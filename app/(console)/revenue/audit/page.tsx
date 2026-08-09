@@ -94,7 +94,7 @@ export default function RevenueAuditPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
         <Skeleton className="h-6 w-32 mb-xs" />
         <Skeleton className="h-10 w-96 mb-md" />
         <Card className="p-md h-96"><Skeleton className="h-full w-full" /></Card>
@@ -124,7 +124,7 @@ export default function RevenueAuditPage() {
   const totalMicroFee = splits.reduce((sum, s) => sum + s.microFeeAmount, 0)
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
       {/* Page Header */}
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Audit & Settlement Biaya Platform</h1>
@@ -159,7 +159,7 @@ export default function RevenueAuditPage() {
       </div>
 
       {/* Audit Data Table Card */}
-      <Card className="p-md bg-surface-container-lowest border border-outline-variant">
+      <Card className="p-md bg-surface-container-lowest border border-outline-variant w-full max-w-full overflow-hidden">
         <div className="flex justify-between items-center mb-md pb-xs border-b border-outline-variant">
           <h2 className="text-headline-md text-on-surface font-semibold">Ledger Settlement Transaksi</h2>
           <div className="flex gap-xs">
@@ -170,7 +170,7 @@ export default function RevenueAuditPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[1000px] text-sm">
             <thead>
               <tr className="border-b border-outline-variant text-label-md text-on-surface font-semibold">
                 <th className="text-left p-md sticky left-0 bg-surface-container-lowest z-10">Split ID</th>

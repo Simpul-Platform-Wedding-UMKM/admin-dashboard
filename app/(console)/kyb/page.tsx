@@ -92,7 +92,7 @@ export default function KYBVerificationPage() {
   // ── Error State ───────────────────────────────────────────────────────────
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Verifikasi KYB</h1>
           <p className="text-body-md text-on-surface-variant">
@@ -109,7 +109,7 @@ export default function KYBVerificationPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background animate-fade-in">
+    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background animate-fade-in w-full max-w-full overflow-hidden">
       {/* ── Page Header ───────────────────────────────────────────────── */}
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Verifikasi KYB</h1>
@@ -175,7 +175,7 @@ export default function KYBVerificationPage() {
       </div>
 
       {/* ── Verification Cards / Table ─────────────────────────────────── */}
-      <Card className="bg-surface-container-lowest border border-outline-variant overflow-hidden">
+      <Card className="bg-surface-container-lowest border border-outline-variant w-full max-w-full overflow-hidden">
         {loading ? (
           <div className="p-md space-y-md">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -221,7 +221,7 @@ export default function KYBVerificationPage() {
         ) : (
           /* ── Table ───────────────────────────────────────────────────── */
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[750px]">
               <thead>
                 <tr className="border-b border-outline-variant bg-surface-container/50">
                   <th className="text-left p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Vendor</th>
