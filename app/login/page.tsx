@@ -52,7 +52,7 @@ export default function LoginPage() {
         <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-white/30 blur-3xl -z-0" />
         <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-primary/10 blur-3xl -z-0" />
 
-        <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-white/70 backdrop-blur-sm font-heading text-headline-lg font-bold text-primary shadow-sm lg:h-20 lg:w-20">
+        <div className="relative flex h-16 w-16 items-center justify-center rounded-xl bg-white/70 backdrop-blur-sm font-heading text-headline-lg font-bold text-primary shadow-sm lg:h-20 lg:w-20">
           S
         </div>
         <div className="relative space-y-2">
@@ -83,7 +83,7 @@ export default function LoginPage() {
       </div>
 
       {/* ── Login form (kiri) ───────────────────────────────────────────── */}
-      <div className="flex flex-1 items-center justify-center px-6 py-12 lg:px-12">
+      <div className="flex flex-1 items-center justify-center bg-white px-6 py-12 lg:px-12">
         <div className="w-full max-w-md">
           {/* Brand mark — mobile only */}
           <div className="mb-8 flex items-center gap-3 lg:hidden">
@@ -93,7 +93,7 @@ export default function LoginPage() {
             <div className="font-heading text-lg font-bold text-on-surface">SIMPUL Admin</div>
           </div>
 
-          <div className="rounded-2xl border border-[#EBDCDA] bg-white p-6 sm:p-8 md:p-10 shadow-[0_8px_40px_rgba(129,82,82,0.08)]">
+          <div className="rounded-xl border border-neutral-100 bg-white p-6 sm:p-8 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.03)]">
             <div className="space-y-1.5">
               <h2 className="font-heading text-headline-md font-bold text-on-surface">Selamat datang kembali</h2>
               <p className="text-body-md text-on-surface-variant">
@@ -125,7 +125,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   aria-invalid={Boolean(fieldErrors.email)}
-                  className="h-12 rounded-xl border-[#E3D2D0] bg-white px-4 text-body-md placeholder:text-muted-foreground focus-visible:ring-primary/40"
+                  className="h-12 rounded-xl border-neutral-200 bg-white px-4 text-body-md placeholder:text-muted-foreground focus-visible:ring-primary/20 focus-visible:border-primary"
                 />
                 {fieldErrors.email && (
                   <p className="text-label-sm text-error">{fieldErrors.email}</p>
@@ -148,7 +148,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     aria-invalid={Boolean(fieldErrors.password)}
-                    className="h-12 rounded-xl border-[#E3D2D0] bg-white pr-12 text-body-md placeholder:text-muted-foreground focus-visible:ring-primary/40"
+                    className="h-12 rounded-xl border-neutral-200 bg-white pr-12 text-body-md placeholder:text-muted-foreground focus-visible:ring-primary/20 focus-visible:border-primary"
                   />
                   <button
                     type="button"
