@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -12,12 +12,14 @@
 
 @layer base {
   :root {
-    /* ── Typography ──────────────────────────────────── */
-    --font-sans: 'DM Sans', system-ui, sans-serif;
-    --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-mono: 'DM Sans', monospace;
+    /* ── Typography ──────────────────────────────────────────────────
+       Prioritaskan font sistem Apple (-apple-system / SF Pro) di
+       perangkat Apple, dengan Inter sebagai fallback lintas platform. */
+    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, sans-serif;
+    --font-heading: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
+    --font-mono: 'SF Mono', 'Menlo', ui-monospace, monospace;
 
-    /* ── MD3 Color Roles (seed: #815252 Dusty Rose) ──── */
+    /* ── MD3 Color Roles (seed: #815252 Dusty Rose) ────────────────── */
     --md-sys-color-primary: #815252;
     --md-sys-color-on-primary: #ffffff;
     --md-sys-color-primary-container: #ffdad9;
@@ -74,27 +76,27 @@
 
     /* ── MD3 Typography Scale (px values) ────────────── */
     --md-sys-typescale-display-large-size: 57px;
-    --md-sys-typescale-display-large-line-height: 64px;
-    --md-sys-typescale-display-large-weight: 400;
+    --md-sys-typescale-display-large-line-height: 62px;
+    --md-sys-typescale-display-large-weight: 700;
 
     --md-sys-typescale-display-medium-size: 45px;
-    --md-sys-typescale-display-medium-line-height: 52px;
-    --md-sys-typescale-display-medium-weight: 400;
+    --md-sys-typescale-display-medium-line-height: 50px;
+    --md-sys-typescale-display-medium-weight: 700;
 
     --md-sys-typescale-display-small-size: 36px;
-    --md-sys-typescale-display-small-line-height: 44px;
-    --md-sys-typescale-display-small-weight: 400;
+    --md-sys-typescale-display-small-line-height: 42px;
+    --md-sys-typescale-display-small-weight: 700;
 
     --md-sys-typescale-headline-large-size: 32px;
-    --md-sys-typescale-headline-large-line-height: 40px;
-    --md-sys-typescale-headline-large-weight: 600;
+    --md-sys-typescale-headline-large-line-height: 38px;
+    --md-sys-typescale-headline-large-weight: 700;
 
     --md-sys-typescale-headline-medium-size: 28px;
-    --md-sys-typescale-headline-medium-line-height: 36px;
-    --md-sys-typescale-headline-medium-weight: 600;
+    --md-sys-typescale-headline-medium-line-height: 34px;
+    --md-sys-typescale-headline-medium-weight: 700;
 
     --md-sys-typescale-headline-small-size: 24px;
-    --md-sys-typescale-headline-small-line-height: 32px;
+    --md-sys-typescale-headline-small-line-height: 30px;
     --md-sys-typescale-headline-small-weight: 600;
 
     --md-sys-typescale-title-large-size: 22px;
@@ -102,7 +104,7 @@
     --md-sys-typescale-title-large-weight: 600;
 
     --md-sys-typescale-title-medium-size: 16px;
-    --md-sys-typescale-title-medium-line-height: 24px;
+    --md-sys-typescale-title-medium-line-height: 22px;
     --md-sys-typescale-title-medium-weight: 600;
 
     --md-sys-typescale-title-small-size: 14px;
@@ -124,34 +126,34 @@
     --md-sys-typescale-label-large-size: 14px;
     --md-sys-typescale-label-large-line-height: 20px;
     --md-sys-typescale-label-large-weight: 500;
-    --md-sys-typescale-label-large-tracking: 0.01em;
+    --md-sys-typescale-label-large-tracking: 0em;
 
     --md-sys-typescale-label-medium-size: 12px;
     --md-sys-typescale-label-medium-line-height: 16px;
     --md-sys-typescale-label-medium-weight: 500;
-    --md-sys-typescale-label-medium-tracking: 0.05em;
+    --md-sys-typescale-label-medium-tracking: 0.02em;
 
     --md-sys-typescale-label-small-size: 11px;
     --md-sys-typescale-label-small-line-height: 16px;
     --md-sys-typescale-label-small-weight: 500;
-    --md-sys-typescale-label-small-tracking: 0.05em;
+    --md-sys-typescale-label-small-tracking: 0.02em;
 
-    /* ── MD3 Shape Scale ─────────────────────────────── */
+    /* ── Shape Scale — rounded corners konsisten 12–16px (Apple HIG) ── */
     --md-sys-shape-corner-none: 0px;
-    --md-sys-shape-corner-extra-small: 4px;
-    --md-sys-shape-corner-small: 8px;
+    --md-sys-shape-corner-extra-small: 6px;
+    --md-sys-shape-corner-small: 10px;
     --md-sys-shape-corner-medium: 12px;
     --md-sys-shape-corner-large: 16px;
-    --md-sys-shape-corner-extra-large: 28px;
+    --md-sys-shape-corner-extra-large: 20px;
     --md-sys-shape-corner-full: 9999px;
 
-    /* ── MD3 Elevation (tonal + shadow) ──────────────── */
+    /* ── Elevation — shadow lembut, netral (bukan tegas/kontras tinggi) ── */
     --md-sys-elevation-0: 0 0 0 0 rgba(0,0,0,0), 0 0 0 0 rgba(0,0,0,0);
-    --md-sys-elevation-1: 0 1px 3px 0 rgba(0,0,0,0.08), 0 1px 2px 0 rgba(0,0,0,0.04);
-    --md-sys-elevation-2: 0 3px 6px 0 rgba(0,0,0,0.08), 0 3px 6px 0 rgba(0,0,0,0.04);
-    --md-sys-elevation-3: 0 6px 16px 0 rgba(0,0,0,0.10), 0 6px 12px 0 rgba(0,0,0,0.04);
-    --md-sys-elevation-4: 0 8px 24px 0 rgba(0,0,0,0.10), 0 8px 16px 0 rgba(0,0,0,0.04);
-    --md-sys-elevation-5: 0 12px 40px 0 rgba(0,0,0,0.12), 0 12px 24px 0 rgba(0,0,0,0.04);
+    --md-sys-elevation-1: 0 1px 2px 0 rgba(0,0,0,0.04), 0 1px 1px 0 rgba(0,0,0,0.03);
+    --md-sys-elevation-2: 0 2px 8px 0 rgba(0,0,0,0.05), 0 1px 2px 0 rgba(0,0,0,0.03);
+    --md-sys-elevation-3: 0 4px 16px 0 rgba(0,0,0,0.06), 0 2px 4px 0 rgba(0,0,0,0.03);
+    --md-sys-elevation-4: 0 8px 24px 0 rgba(0,0,0,0.07), 0 4px 8px 0 rgba(0,0,0,0.03);
+    --md-sys-elevation-5: 0 16px 40px 0 rgba(0,0,0,0.09), 0 6px 12px 0 rgba(0,0,0,0.04);
 
     /* ── Legacy aliases (backward compat) ────────────── */
     --primary: var(--md-sys-color-primary);
@@ -259,18 +261,47 @@
   }
   body {
     @apply bg-[#FBF7F6] text-foreground font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   /* ── Premium polish: card shadow halus, focus ring konsisten ────── */
   [data-slot='card'] {
-    @apply border-[#EBDCDA] shadow-[0_1px_3px_rgba(129,82,82,0.06),0_8px_24px_rgba(129,82,82,0.05)];
+    @apply border-[#EBDCDA] shadow-[0_1px_2px_rgba(129,82,82,0.04),0_8px_24px_rgba(129,82,82,0.05)];
   }
 
   button:focus-visible,
   a:focus-visible,
-  [role='button']:focus-visible {
+  [role='button']:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
     @apply outline-none ring-2 ring-offset-2 ring-offset-white;
     --tw-ring-color: rgba(129, 82, 82, 0.45);
+  }
+
+  /* ── Transisi halus & konsisten di seluruh elemen interaktif ────── */
+  button,
+  a,
+  [role='button'],
+  input,
+  select,
+  textarea,
+  [data-slot='card'] {
+    transition-property: background-color, border-color, color, box-shadow, transform, opacity;
+    transition-duration: 200ms;
+    transition-timing-function: ease-in-out;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -299,5 +330,18 @@
   svg.lucide.h-6.w-6 {
     width: 1.5rem;
     height: 1.5rem;
+  }
+
+  /* ── Tap target helper — pastikan area sentuh minimal 44x44px ──── */
+  .tap-target {
+    @apply relative;
+  }
+  .tap-target::after {
+    content: '';
+    position: absolute;
+    inset: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
   }
 }

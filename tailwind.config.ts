@@ -10,9 +10,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
-        heading: ['var(--font-heading)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-mono)', 'monospace'],
+        sans: ['var(--font-sans)', '-apple-system', 'BlinkMacSystemFont', 'Inter', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-heading)', '-apple-system', 'BlinkMacSystemFont', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
       },
       fontSize: {
         /* MD3: Display (hero) */
@@ -164,8 +164,8 @@ const config: Config = {
         md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
         xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        elevated: '0 12px 24px rgba(30, 27, 25, 0.06)',
-        'elevated-lg': '0 24px 48px rgba(30, 27, 25, 0.1)',
+        elevated: '0 12px 24px rgba(0, 0, 0, 0.06)',
+        'elevated-lg': '0 24px 48px rgba(0, 0, 0, 0.08)',
         /* MD3 elevation levels */
         'md3-0': 'var(--md-sys-elevation-0)',
         'md3-1': 'var(--md-sys-elevation-1)',

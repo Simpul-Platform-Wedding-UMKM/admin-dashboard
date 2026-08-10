@@ -24,9 +24,9 @@ export default function DashboardLayout({
         <SiteHeader />
         {/* Main content: max-width + auto margin — no horizontal page scroll.
             Padding diatur per-halaman (p-lg md:p-xl) supaya tidak dobel. */}
-        <div className="flex flex-1 flex-col overflow-hidden">
+        <div className="flex flex-1 flex-col overflow-hidden bg-[#FBF7F6]">
           <div className="flex-1 overflow-auto">
-            <div className="mx-auto w-full max-w-[1280px]">
+            <div className="mx-auto w-full max-w-[1280px] pt-6">
               {children}
             </div>
           </div>
