@@ -94,7 +94,7 @@ export default function RevenueAuditPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background w-full max-w-full overflow-hidden">
         <Skeleton className="h-6 w-32 mb-xs" />
         <Skeleton className="h-10 w-96 mb-md" />
         <Card className="p-md h-96"><Skeleton className="h-full w-full" /></Card>
@@ -124,7 +124,7 @@ export default function RevenueAuditPage() {
   const totalMicroFee = splits.reduce((sum, s) => sum + s.microFeeAmount, 0)
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background w-full max-w-full overflow-hidden">
       {/* Page Header */}
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Audit & Settlement Biaya Platform</h1>
@@ -236,8 +236,8 @@ export default function RevenueAuditPage() {
                           )}
                         </Button>
                       ) : (
-                        <span className="text-label-sm text-on-surface-variant flex items-center justify-center gap-xs text-[11px] opacity-75">
-                          <CheckCircle className="h-3.5 w-3.5 text-tertiary-container" /> Settled Manual
+                        <span className="text-label-sm text-on-surface-variant flex items-center justify-center gap-xs">
+                          <CheckCircle className="h-4 w-4 text-tertiary-container" /> Settled Manual
                         </span>
                       )}
                     </td>

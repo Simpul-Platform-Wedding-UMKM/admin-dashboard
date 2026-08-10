@@ -40,7 +40,7 @@ export default function TransactionsPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl w-full max-w-full overflow-hidden">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl w-full max-w-full overflow-hidden">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Transactions & Payment Splits</h1>
           <p className="text-body-md text-on-surface-variant">Track all payment splits with fee breakdown and QRIS codes</p>
@@ -75,7 +75,7 @@ export default function TransactionsPage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Transactions & Payment Splits</h1>
           <p className="text-body-md text-on-surface-variant">Track all payment splits with fee breakdown and QRIS codes</p>
@@ -93,7 +93,7 @@ export default function TransactionsPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl w-full max-w-full overflow-hidden">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl w-full max-w-full overflow-hidden">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface">Transactions & Payment Splits</h1>
         <p className="text-body-md text-on-surface-variant">Track all payment splits with fee breakdown and QRIS codes</p>

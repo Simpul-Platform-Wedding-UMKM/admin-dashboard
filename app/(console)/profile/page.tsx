@@ -83,7 +83,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background">
       {/* Header Profile Cover */}
       <div className="relative rounded-xl overflow-hidden bg-gradient-to-r from-primary/80 to-tertiary/90 p-md md:p-lg text-white flex flex-col sm:flex-row items-center gap-md border border-outline-variant/10 shadow-sm">
         <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-headline-lg font-bold border-2 border-white/40">
@@ -247,7 +247,7 @@ export default function ProfilePage() {
                     <div className="flex items-center gap-md shrink-0">
                       <div className="text-right">
                         <p className="text-body-sm font-bold text-on-surface">{inv.amount}</p>
-                        <Badge className="bg-tertiary-container text-on-tertiary-container py-0 px-1 text-[10px]">{inv.status}</Badge>
+                        <Badge className="bg-tertiary-container text-on-tertiary-container py-0 px-1.5 text-label-xs">{inv.status}</Badge>
                       </div>
                       <Button variant="ghost" size="icon" onClick={() => handleDownloadInvoice(inv.id)} className="h-8 w-8 hover:bg-surface-container rounded-full text-on-surface-variant">
                         <Download className="h-4 w-4" />

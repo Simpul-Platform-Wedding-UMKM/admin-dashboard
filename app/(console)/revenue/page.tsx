@@ -28,7 +28,7 @@ export default function RevenueFinancialPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Revenue & Financial</h1>
           <p className="text-body-md text-on-surface-variant">Track all platform revenue streams and financial performance</p>
@@ -72,7 +72,7 @@ export default function RevenueFinancialPage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Revenue & Financial</h1>
           <p className="text-body-md text-on-surface-variant">Track all platform revenue streams and financial performance</p>
@@ -95,7 +95,7 @@ export default function RevenueFinancialPage() {
   const totalSettled = splits.filter(s => s.settlementStatus === 'COMPLETED').reduce((sum, s) => sum + s.netAmount, 0)
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface">Revenue & Financial</h1>
         <p className="text-body-md text-on-surface-variant">Track all platform revenue streams and financial performance</p>

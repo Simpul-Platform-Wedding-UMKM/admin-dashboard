@@ -210,7 +210,7 @@ export default function QrisHeatmapPage() {
   }, [loading, points, selectedKecamatan])
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background">
       {/* Title Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md pb-xs border-b border-outline-variant">
         <div>

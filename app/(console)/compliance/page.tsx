@@ -81,7 +81,7 @@ export default function RiskCompliancePage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface">Risiko & Kepatuhan</h1>
           <p className="text-body-md text-on-surface-variant">Pantau kepatuhan mitra vendor, faktor risiko platform, dan log audit keamanan.</p>
@@ -125,7 +125,7 @@ export default function RiskCompliancePage() {
 
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background w-full max-w-full overflow-hidden">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Risiko & Kepatuhan</h1>
           <p className="text-body-md text-on-surface-variant">Pantau kepatuhan mitra vendor, faktor risiko platform, dan log audit keamanan.</p>
@@ -140,7 +140,7 @@ export default function RiskCompliancePage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background w-full max-w-full overflow-hidden">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Risiko & Kepatuhan</h1>
         <p className="text-body-md text-on-surface-variant">Pantau kepatuhan mitra vendor, faktor risiko platform, dan log audit keamanan.</p>

@@ -43,9 +43,9 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-dvh w-full items-center justify-center bg-[#FAF8F7] p-0 sm:p-6 lg:p-10 font-sans selection:bg-[#8B5A5A]/15 selection:text-[#8B5A5A]">
+    <main className="flex min-h-dvh w-full items-center justify-center bg-[#FAF8F7] p-0 sm:p-6 lg:p-10 2xl:p-14 font-sans selection:bg-[#8B5A5A]/15 selection:text-[#8B5A5A]">
       {/* ── Auth Card — 16:9 on sm+ screens, natural height on mobile ── */}
-      <div className="relative flex w-full max-w-6xl flex-col overflow-hidden bg-white sm:aspect-video sm:max-h-[calc(100dvh-5rem)] sm:flex-row sm:rounded-2xl sm:shadow-xl sm:border sm:border-neutral-100">
+      <div className="relative flex w-full max-w-6xl 2xl:max-w-[1440px] flex-col overflow-hidden bg-white sm:aspect-video sm:max-h-[calc(100dvh-5rem)] sm:flex-row sm:rounded-2xl sm:shadow-xl sm:border sm:border-neutral-100">
 
         {/* ═══ LEFT PANEL: Logo & Brand (hidden on mobile, shown ≥ sm) ═══ */}
         <div className="relative hidden sm:flex sm:w-[46%] lg:w-[50%] shrink-0 flex-col items-center justify-center overflow-hidden bg-neutral-950">
@@ -60,19 +60,19 @@ export default function LoginPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#3a1f1f]/80 via-[#5a3333]/55 to-[#8B5A5A]/70" />
 
           {/* Logo card */}
-          <div className="relative z-10 flex flex-col items-center gap-6 px-8">
-            <div className="rounded-2xl bg-white/95 px-8 py-6 shadow-lg backdrop-blur-sm">
+          <div className="relative z-10 flex flex-col items-center gap-6 px-8 2xl:gap-8">
+            <div className="rounded-2xl bg-white/95 px-8 py-6 shadow-lg backdrop-blur-sm 2xl:px-12 2xl:py-8">
               <img
                 src="/images/logo.png"
                 alt="SIMPUL"
-                className="h-9 w-auto object-contain lg:h-11"
+                className="h-9 w-auto object-contain lg:h-11 2xl:h-14"
               />
             </div>
             <div className="space-y-1.5 text-center">
-              <p className="text-[10px] tracking-widest uppercase font-semibold text-white/70">
+              <p className="text-[10px] tracking-widest uppercase font-semibold text-white/70 2xl:text-xs">
                 SIMPUL Wedding Ecosystem
               </p>
-              <p className="font-heading text-lg lg:text-xl font-bold text-white tracking-tight max-w-[280px]">
+              <p className="font-heading text-lg lg:text-xl 2xl:text-2xl font-bold text-white tracking-tight max-w-[280px] 2xl:max-w-sm">
                 Admin Dashboard
               </p>
             </div>
@@ -80,7 +80,7 @@ export default function LoginPage() {
         </div>
 
         {/* ═══ RIGHT PANEL: Form Area ═══ */}
-        <div className="flex flex-1 flex-col overflow-y-auto bg-white px-6 py-8 sm:px-8 sm:py-8 md:px-12 md:py-10 lg:px-16">
+        <div className="flex flex-1 flex-col overflow-y-auto bg-white px-6 py-8 sm:px-8 sm:py-8 md:px-12 md:py-10 lg:px-16 2xl:px-24">
 
           {/* Mobile-only compact logo header */}
           <div className="mb-8 flex items-center justify-center sm:hidden">
@@ -88,15 +88,15 @@ export default function LoginPage() {
           </div>
 
           {/* Center Content Section */}
-          <div className="my-auto w-full max-w-[420px] mx-auto">
+          <div className="my-auto w-full max-w-[420px] 2xl:max-w-[520px] mx-auto">
             {/* Headline */}
-            <div className="mb-8 space-y-2">
-              <h1 className="font-heading text-2xl sm:text-3xl lg:text-[34px] font-black tracking-tight text-[#1A1515] leading-[1.1] uppercase">
+            <div className="mb-8 space-y-2 2xl:mb-10 2xl:space-y-3">
+              <h1 className="font-heading text-2xl sm:text-3xl lg:text-[34px] 2xl:text-[44px] font-black tracking-tight text-[#1A1515] leading-[1.1] uppercase">
                 KELOLA<br />
                 EKOSISTEM WEDDING<br />
                 ANDA
               </h1>
-              <p className="text-xs sm:text-sm text-neutral-500 font-normal leading-relaxed">
+              <p className="text-xs sm:text-sm 2xl:text-base text-neutral-500 font-normal leading-relaxed">
                 Masuk ke akun admin untuk mengelola ekosistem platform.
               </p>
             </div>
@@ -113,10 +113,10 @@ export default function LoginPage() {
             )}
 
             {/* Underline Minimalist Login Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 2xl:space-y-7">
               {/* Email Field */}
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[11px] font-semibold tracking-widest uppercase text-neutral-500">
+                <Label htmlFor="email" className="text-[11px] font-semibold tracking-widest uppercase text-neutral-500 2xl:text-xs">
                   EMAIL ADMIN
                 </Label>
                 <input
@@ -126,7 +126,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   aria-invalid={Boolean(fieldErrors.email)}
-                  className="h-11 w-full rounded-none border-b-2 border-t-0 border-l-0 border-r-0 border-neutral-300 bg-transparent px-0 text-sm font-medium text-neutral-900 focus:border-[#8B5A5A] focus:outline-none transition-colors duration-200"
+                  className="h-11 2xl:h-14 w-full rounded-none border-b-2 border-t-0 border-l-0 border-r-0 border-neutral-300 bg-transparent px-0 text-sm 2xl:text-base font-medium text-neutral-900 focus:border-[#8B5A5A] focus:outline-none transition-colors duration-200"
                 />
                 {fieldErrors.email && (
                   <p className="text-xs font-medium text-rose-600 mt-1">{fieldErrors.email}</p>
@@ -136,12 +136,12 @@ export default function LoginPage() {
               {/* Password Field with Inline 'Lupa password?' */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-[11px] font-semibold tracking-widest uppercase text-neutral-500">
+                  <Label htmlFor="password" className="text-[11px] font-semibold tracking-widest uppercase text-neutral-500 2xl:text-xs">
                     PASSWORD
                   </Label>
                   <button
                     type="button"
-                    className="text-xs font-medium text-neutral-400 hover:text-[#8B5A5A] transition-colors cursor-pointer"
+                    className="text-xs font-medium text-neutral-400 hover:text-[#8B5A5A] transition-colors cursor-pointer 2xl:text-sm"
                     onClick={() => {}}
                   >
                     Lupa password?
@@ -155,7 +155,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     aria-invalid={Boolean(fieldErrors.password)}
-                    className="h-11 w-full rounded-none border-b-2 border-t-0 border-l-0 border-r-0 border-neutral-300 bg-transparent px-0 pr-10 text-sm font-medium text-neutral-900 focus:border-[#8B5A5A] focus:outline-none transition-colors duration-200"
+                    className="h-11 2xl:h-14 w-full rounded-none border-b-2 border-t-0 border-l-0 border-r-0 border-neutral-300 bg-transparent px-0 pr-10 text-sm 2xl:text-base font-medium text-neutral-900 focus:border-[#8B5A5A] focus:outline-none transition-colors duration-200"
                   />
                   <button
                     type="button"
@@ -163,7 +163,7 @@ export default function LoginPage() {
                     className="absolute right-0 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors hover:text-neutral-700 p-1"
                     aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? <EyeOff className="h-4 w-4 2xl:h-5 2xl:w-5" /> : <Eye className="h-4 w-4 2xl:h-5 2xl:w-5" />}
                   </button>
                 </div>
                 {fieldErrors.password && (
@@ -177,9 +177,9 @@ export default function LoginPage() {
                   id="remember"
                   checked={rememberMe}
                   onCheckedChange={(v) => setRememberMe(v === true)}
-                  className="h-4 w-4 rounded-[4px] border-neutral-300 data-[state=checked]:bg-[#8B5A5A] data-[state=checked]:border-[#8B5A5A]"
+                  className="h-4 w-4 2xl:h-5 2xl:w-5 rounded-[4px] border-neutral-300 data-[state=checked]:bg-[#8B5A5A] data-[state=checked]:border-[#8B5A5A]"
                 />
-                <Label htmlFor="remember" className="cursor-pointer text-xs font-normal text-neutral-600 select-none">
+                <Label htmlFor="remember" className="cursor-pointer text-xs font-normal text-neutral-600 select-none 2xl:text-sm">
                   Ingat sesi login saya
                 </Label>
               </div>
@@ -188,14 +188,14 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="h-15 w-full rounded-md bg-[#8B5A5A] hover:bg-[#774949] active:scale-[0.99] text-white text-xs font-bold tracking-widest uppercase shadow-xs transition-all duration-200 disabled:opacity-60 cursor-pointer"
+                className="h-12 2xl:h-14 w-full rounded-md bg-[#8B5A5A] hover:bg-[#774949] active:scale-[0.99] text-xs 2xl:text-sm font-bold tracking-widest uppercase shadow-xs transition-all duration-200 disabled:opacity-60 cursor-pointer"
               >
                 {isSubmitting ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-white" />
+                  <Loader2 className="h-4 w-4 animate-spin text-white 2xl:h-5 2xl:w-5" />
                 ) : (
                   <span className="flex items-center justify-center gap-2">
                     Masuk ke Console
-                    <ArrowRight className="h-4 w-4 opacity-80" />
+                    <ArrowRight className="h-4 w-4 opacity-80 2xl:h-5 2xl:w-5" />
                   </span>
                 )}
               </Button>

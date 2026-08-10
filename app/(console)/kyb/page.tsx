@@ -92,7 +92,7 @@ export default function KYBVerificationPage() {
   // ── Error State ───────────────────────────────────────────────────────────
   if (error) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background w-full max-w-full overflow-hidden">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background w-full max-w-full overflow-hidden">
         <div>
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Verifikasi KYB</h1>
           <p className="text-body-md text-on-surface-variant">
@@ -109,7 +109,7 @@ export default function KYBVerificationPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background animate-fade-in w-full max-w-full overflow-hidden">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background animate-fade-in w-full max-w-full overflow-hidden">
       {/* ── Page Header ───────────────────────────────────────────────── */}
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Verifikasi KYB</h1>
@@ -185,7 +185,7 @@ export default function KYBVerificationPage() {
                   <Skeleton className="h-5 w-48" />
                   <Skeleton className="h-4 w-32" />
                 </div>
-                <div className="flex gap-2">
+                <div className="hidden md:flex gap-2">
                   {Array.from({ length: 4 }).map((_, j) => (
                     <Skeleton key={j} className="h-10 w-20 rounded-md" />
                   ))}
@@ -219,16 +219,56 @@ export default function KYBVerificationPage() {
             </p>
           </div>
         ) : (
-          /* ── Table ───────────────────────────────────────────────────── */
-          <div className="overflow-x-auto">
+          /* ── Table (desktop) + Card list (mobile) ──────────────────── */
+          <>
+            {/* Mobile: stacked cards */}
+            <div className="divide-y divide-outline-variant md:hidden">
+              {filtered.map((v) => (
+                <div key={v.vendorId} className="p-md">
+                  <div className="flex items-start justify-between gap-sm">
+                    <div className="min-w-0">
+                      <p className="text-body-md text-on-surface font-semibold truncate">{v.businessName}</p>
+                      <p className="text-label-sm text-on-surface-variant">{v.vendorId}</p>
+                      <p className="text-label-sm text-on-surface-variant mt-1">{v.category} &bull; {v.region}</p>
+                    </div>
+                    {getStatusBadge(v.status)}
+                  </div>
+                  <div className="flex items-center justify-between mt-md">
+                    <div className="flex gap-1.5">
+                      {DOC_LABELS.map(doc => (
+                        <span
+                          key={doc.key}
+                          className={`text-label-xs font-semibold px-2 py-1 rounded ${doc.color}`}
+                        >
+                          {doc.label}
+                        </span>
+                      ))}
+                    </div>
+                    <Link href={`/kyb/${v.vendorId}`} className="shrink-0">
+                      <Button variant="outline" size="sm" className="h-8 text-label-lg rounded-corner-full">
+                        Lihat Detail
+                      </Button>
+                    </Link>
+                  </div>
+                  {v.submittedAt && (
+                    <p className="text-label-xs text-on-surface-variant/60 mt-sm">
+                      Submit: {formatDate(v.submittedAt)}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: table */}
+            <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[750px]">
               <thead>
                 <tr className="border-b border-outline-variant bg-surface-container/50">
                   <th className="text-left p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Vendor</th>
-                  <th className="text-left p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider hidden md:table-cell">Kategori</th>
-                  <th className="text-left p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider hidden lg:table-cell">Wilayah</th>
+                  <th className="text-left p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider hidden lg:table-cell">Kategori</th>
+                  <th className="text-left p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider hidden xl:table-cell">Wilayah</th>
                   <th className="text-left p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider hidden xl:table-cell">Tanggal Submit</th>
-                  <th className="text-center p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider hidden md:table-cell">Dokumen</th>
+                  <th className="text-center p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider hidden lg:table-cell">Dokumen</th>
                   <th className="text-center p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Status</th>
                   <th className="text-center p-md text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -237,16 +277,16 @@ export default function KYBVerificationPage() {
                 {filtered.map((v) => (
                   <tr key={v.vendorId} className="group border-b border-outline-variant hover:bg-surface-container transition-colors">
                     {/* Vendor info */}
-                    <td className="p-md">
-                      <p className="text-body-md text-on-surface font-semibold">{v.businessName}</p>
+                    <td className="p-md max-w-0">
+                      <p className="text-body-md text-on-surface font-semibold truncate">{v.businessName}</p>
                       <p className="text-label-sm text-on-surface-variant">{v.vendorId}</p>
                     </td>
                     {/* Category */}
-                    <td className="p-md hidden md:table-cell">
+                    <td className="p-md hidden lg:table-cell">
                       <span className="text-body-sm text-on-surface-variant">{v.category}</span>
                     </td>
                     {/* Region */}
-                    <td className="p-md hidden lg:table-cell">
+                    <td className="p-md hidden xl:table-cell">
                       <span className="text-body-sm text-on-surface-variant">{v.region}</span>
                     </td>
                     {/* Submit date */}
@@ -256,12 +296,12 @@ export default function KYBVerificationPage() {
                       </span>
                     </td>
                     {/* Document thumbnails */}
-                    <td className="p-md hidden md:table-cell">
+                    <td className="p-md hidden lg:table-cell">
                       <div className="flex gap-1.5 justify-center">
                         {DOC_LABELS.map(doc => (
                           <div
                             key={doc.key}
-                            className={`text-[10px] font-semibold px-2 py-1 rounded ${doc.color}`}
+                            className={`text-label-xs font-semibold px-2 py-1 rounded ${doc.color}`}
                             title={doc.label}
                           >
                             {doc.label}
@@ -285,7 +325,8 @@ export default function KYBVerificationPage() {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </>
         )}
       </Card>
     </main>

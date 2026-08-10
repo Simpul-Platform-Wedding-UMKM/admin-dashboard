@@ -92,7 +92,7 @@ export default function SettingsPage() {
   const ActiveIcon = tabs.find(t => t.id === activeTab)?.icon || Settings2
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background">
       <div>
         <h1 className="font-heading text-headline-lg text-on-surface font-bold">Pengaturan Platform</h1>
         <p className="text-body-md text-on-surface-variant">Konfigurasi variabel sistem, pembagian fee bagi hasil, dan integrasi eksternal SIMPUL.</p>

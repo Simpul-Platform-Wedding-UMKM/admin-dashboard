@@ -238,10 +238,10 @@ export default function HelpdeskInboxPage() {
                     <span>{formatDate(ticket.createdAt)}</span>
                   </div>
                   <div className="flex items-center gap-xs mt-1">
-                    <Badge variant="outline" className="text-[10px] py-0 px-1.5">
+                    <Badge variant="outline" className="text-label-xs py-0 px-1.5">
                       {ticket.category}
                     </Badge>
-                    <Badge variant="outline" className="text-[10px] py-0 px-1.5 bg-background">
+                    <Badge variant="outline" className="text-label-xs py-0 px-1.5 bg-background">
                       {ticket.role}
                     </Badge>
                   </div>
@@ -296,9 +296,9 @@ export default function HelpdeskInboxPage() {
                     }`}
                   >
                     <div className="flex items-center gap-xs mb-1">
-                      <User className="h-3 w-3 text-on-surface-variant" />
-                      <span className="text-[10px] text-on-surface-variant font-medium">{msg.senderName}</span>
-                      <span className="text-[9px] text-on-surface-variant opacity-75">{formatDate(msg.timestamp)}</span>
+                      <User className="h-4 w-4 text-on-surface-variant" />
+                      <span className="text-label-xs text-on-surface-variant font-medium">{msg.senderName}</span>
+                      <span className="text-[10px] text-on-surface-variant opacity-75">{formatDate(msg.timestamp)}</span>
                     </div>
                     <div className={`p-md rounded-lg text-body-sm leading-relaxed ${
                       msg.sender === 'ADMIN' 

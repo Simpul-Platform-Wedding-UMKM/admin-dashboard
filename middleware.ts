@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { SESSION_COOKIE } from '@/lib/session'
+
+const SESSION_COOKIE = 'simpul_session'
 
 const PUBLIC_PATHS = ['/login']
 
@@ -28,5 +29,6 @@ export function middleware(request: NextRequest) {
 
 // Run on every route except static assets and Next internals.
 export const config = {
+  runtime: 'nodejs',
   matcher: ['/((?!_next|.*\\..*).*)'],
 }

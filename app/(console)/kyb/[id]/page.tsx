@@ -234,7 +234,7 @@ export default function KYBDetailsPage() {
   // ── Loading State ─────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
         <div className="flex items-center gap-xs"><Skeleton className="h-6 w-24" /></div>
         <div className="flex flex-col md:flex-row justify-between gap-md mb-sm">
           <div><Skeleton className="h-8 w-64 mb-xs" /><Skeleton className="h-4 w-40" /></div>
@@ -275,7 +275,7 @@ export default function KYBDetailsPage() {
   const currentDocTab = DOC_TABS.find(t => t.key === activeDocTab)!
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background">
       {/* ── Breadcrumb / Back ─────────────────────────────────────────── */}
       <div className="flex items-center gap-xs">
         <Link href="/kyb" className="text-label-md text-on-surface-variant hover:text-on-surface flex items-center transition-colors">
@@ -285,15 +285,15 @@ export default function KYBDetailsPage() {
 
       {/* ── Header Banner ─────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-md pb-xs border-b border-outline-variant">
-        <div>
-          <div className="flex items-center gap-sm mb-xs">
-            <h1 className="font-heading text-headline-lg text-on-surface break-words min-w-0">{vendor.businessName}</h1>
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-sm mb-xs">
+            <h1 className="font-heading text-headline-md sm:text-headline-lg text-on-surface break-words min-w-0">{vendor.businessName}</h1>
             {getStatusBadge(vendor.status)}
           </div>
-          <p className="text-body-md text-on-surface-variant">
+          <p className="text-body-md text-on-surface-variant flex flex-wrap items-center gap-x-xs">
             Diajukan oleh: <span className="font-semibold">{vendor.name}</span> &bull; {vendor.businessType}
             {vendor.createdAt && (
-              <span className="ml-sm text-label-sm">
+              <span className="text-label-sm">
                 &bull; Submit: {formatDate(vendor.createdAt)}
               </span>
             )}
@@ -422,7 +422,7 @@ export default function KYBDetailsPage() {
                           {log.rejectedDocuments && log.rejectedDocuments.length > 0 && (
                             <div className="flex gap-1 mt-1">
                               {log.rejectedDocuments.map(d => (
-                                <span key={d} className="text-[10px] font-semibold px-1.5 py-0.5 bg-error-container text-on-error-container rounded uppercase">{d}</span>
+                                <span key={d} className="text-label-xs font-semibold px-1.5 py-0.5 bg-error-container text-on-error-container rounded uppercase">{d}</span>
                               ))}
                             </div>
                           )}
@@ -469,24 +469,25 @@ export default function KYBDetailsPage() {
 
             {/* Document Preview Area */}
             <div className="p-md">
-              <div className="flex items-center justify-between mb-sm">
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-sm mb-sm">
+                <div className="min-w-0">
                   <h4 className="text-body-md text-on-surface font-semibold">{currentDocTab.title}</h4>
                   <p className="text-label-sm text-on-surface-variant">
                     {currentDocUrl ? 'Dokumen tersedia — klik untuk memperbesar' : 'Dokumen tidak tersedia'}
                   </p>
                 </div>
                 {currentDocUrl && (
-                  <div className="flex gap-xs">
+                  <div className="flex gap-xs shrink-0">
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => setZoomDoc({ title: currentDocTab.title, url: currentDocUrl })}
+                      className="flex-1 sm:flex-initial"
                     >
                       <ZoomIn className="h-4 w-4 mr-xs" /> Perbesar
                     </Button>
                     <a href={currentDocUrl} target="_blank" rel="noreferrer">
-                      <Button size="sm" variant="outline">
+                      <Button size="sm" variant="outline" className="flex-1 sm:flex-initial">
                         <ExternalLink className="h-4 w-4 mr-xs" /> Buka
                       </Button>
                     </a>
@@ -499,7 +500,7 @@ export default function KYBDetailsPage() {
                 <div
                   className="relative w-full rounded-lg overflow-hidden border border-outline-variant bg-surface-container cursor-pointer group"
                   onClick={() => setZoomDoc({ title: currentDocTab.title, url: currentDocUrl })}
-                  style={{ minHeight: 400 }}
+                  style={{ minHeight: 260 }}
                 >
                   <img
                     src={currentDocUrl}
@@ -514,7 +515,7 @@ export default function KYBDetailsPage() {
                   </div>
                 </div>
               ) : (
-                <div className="w-full h-64 rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center bg-surface-container/50 text-on-surface-variant">
+                <div className="w-full h-48 sm:h-64 rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center bg-surface-container/50 text-on-surface-variant px-md text-center">
                   <FileText className="h-12 w-12 mb-sm opacity-30" />
                   <p className="text-label-md">Dokumen belum diunggah</p>
                   <p className="text-label-sm opacity-60">Vendor belum mengunggah dokumen {currentDocTab.title.toLowerCase()}.</p>
@@ -522,7 +523,7 @@ export default function KYBDetailsPage() {
               )}
 
               {/* Document Status Indicators */}
-              <div className="flex gap-2 mt-md">
+              <div className="flex flex-wrap gap-2 mt-md">
                 {DOC_TABS.map(tab => (
                   <button
                     key={tab.key}
@@ -705,14 +706,14 @@ export default function KYBDetailsPage() {
                 <span className="sr-only">Tutup pratinjau</span>
               </Button>
             </DialogHeader>
-            <div className="relative w-full h-[70vh] bg-black flex items-center justify-center p-sm overflow-auto">
+            <div className="relative w-full h-[60vh] sm:h-[70vh] bg-black flex items-center justify-center p-sm overflow-auto">
               <img
                 src={zoomDoc.url}
                 alt={zoomDoc.title}
                 className="max-w-none object-contain rounded-md border border-outline-variant shadow-lg"
               />
             </div>
-            <div className="p-sm bg-surface-container-lowest border-t border-outline-variant flex justify-end gap-sm">
+            <div className="p-sm bg-surface-container-lowest border-t border-outline-variant flex justify-end gap-sm flex-wrap">
               <a href={zoomDoc.url} target="_blank" rel="noreferrer" className="no-underline">
                 <Button size="sm" variant="outline" className="flex items-center gap-xs">
                   <ExternalLink className="h-4 w-4" /> Buka Tab Baru

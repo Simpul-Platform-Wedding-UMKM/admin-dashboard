@@ -232,7 +232,7 @@ export function SiteHeader() {
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
-            className="mx-2 data-[orientation=vertical]:h-4 bg-outline-variant"
+            className="mx-2 data-[orientation=vertical]:h-6 bg-outline"
           />
 
           {/* Full search bar from sm breakpoint up */}

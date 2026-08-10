@@ -190,7 +190,7 @@ export default function DisputeMediationPage() {
 
   if (loading) {
     return (
-      <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+      <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background">
         <Skeleton className="h-6 w-32 mb-xs" />
         <Skeleton className="h-10 w-96 mb-md" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-md">
@@ -225,7 +225,7 @@ export default function DisputeMediationPage() {
   const vendorNet = vendorGross - platformFee - microFee
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background">
       {/* Navigation Header */}
       <div className="flex items-center gap-xs">
         <Link href="/disputes" className="text-label-md text-on-surface-variant hover:text-on-surface flex items-center transition-colors">
@@ -400,9 +400,9 @@ export default function DisputeMediationPage() {
                     <div className="p-sm flex justify-end text-label-sm text-on-surface-variant">
                       <button 
                         onClick={() => setZoomImg(imgUrl)}
-                        className="text-tertiary font-semibold hover:underline flex items-center gap-xs bg-transparent border-none cursor-pointer"
+                        className="text-tertiary font-semibold hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer py-1"
                       >
-                        Pratinjau <ExternalLink className="h-3 w-3" />
+                        Pratinjau <ExternalLink className="h-4 w-4" />
                       </button>
                     </div>
                   </Card>

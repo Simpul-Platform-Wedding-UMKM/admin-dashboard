@@ -125,7 +125,7 @@ export default function NotificationsPage() {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-lg p-lg md:p-xl bg-background">
+    <main className="flex flex-1 flex-col gap-lg p-md md:p-xl bg-background">
       {/* Title Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-sm border-b border-outline-variant pb-md">
         <div>
@@ -178,7 +178,7 @@ export default function NotificationsPage() {
             {(() => {
               const count = notifications.filter(n => !n.isRead && (type === 'ALL' || n.type === type)).length
               return count > 0 ? (
-                <span className="ml-xs px-1.5 py-0.5 rounded-full bg-error text-white text-[9px] font-bold">
+                <span className="ml-xs px-1.5 py-0.5 rounded-full bg-error text-white text-[10px] font-bold">
                   {count}
                 </span>
               ) : null
