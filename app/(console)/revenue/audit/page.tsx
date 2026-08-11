@@ -132,7 +132,7 @@ export default function RevenueAuditPage() {
       </div>
 
       {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-md">
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Total Pembayaran (Gross)</p>
           <p className="text-headline-md text-on-surface font-bold">{formatCurrency(totalVolume)}</p>
@@ -162,7 +162,7 @@ export default function RevenueAuditPage() {
       <Card className="p-md bg-surface-container-lowest border border-outline-variant w-full max-w-full overflow-hidden">
         <div className="flex justify-between items-center mb-md pb-xs border-b border-outline-variant">
           <h2 className="text-headline-md text-on-surface font-semibold">Ledger Settlement Transaksi</h2>
-          <div className="flex gap-xs">
+          <div className="flex flex-wrap gap-xs">
             <Badge className="bg-tertiary-container text-on-tertiary-container font-medium">{settledSplits.length} Settled</Badge>
             {pendingSplits.length > 0 && <Badge className="bg-tertiary text-on-tertiary font-medium">{pendingSplits.length} Pending</Badge>}
             {failedSplits.length > 0 && <Badge className="bg-error text-on-error font-medium">{failedSplits.length} Failed</Badge>}
@@ -170,18 +170,18 @@ export default function RevenueAuditPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1000px] text-sm">
+          <table className="w-full min-w-[840px] text-sm">
             <thead>
               <tr className="border-b border-outline-variant text-label-md text-on-surface font-semibold">
-                <th className="text-left p-md sticky left-0 bg-surface-container-lowest z-10">Split ID</th>
-                <th className="text-left p-md">Nama Vendor</th>
-                <th className="text-left p-md">Paket Resepsi</th>
-                <th className="text-right p-md">Gross Amount</th>
-                <th className="text-right p-md">Platform (1%)</th>
-                <th className="text-right p-md">PJP Fee (0.5%)</th>
-                <th className="text-right p-md">Net Payout</th>
-                <th className="text-center p-md">Status Settlement</th>
-                <th className="text-center p-md">Aksi Darurat</th>
+                <th className="text-left px-3 py-2 sticky left-0 bg-surface-container-lowest z-10">Split ID</th>
+                <th className="text-left px-3 py-2">Nama Vendor</th>
+                <th className="text-left px-3 py-2 hidden md:table-cell">Paket Resepsi</th>
+                <th className="text-right px-3 py-2">Gross Amount</th>
+                <th className="text-right px-3 py-2 hidden lg:table-cell">Platform (1%)</th>
+                <th className="text-right px-3 py-2 hidden lg:table-cell">PJP Fee (0.5%)</th>
+                <th className="text-right px-3 py-2">Net Payout</th>
+                <th className="text-center px-3 py-2">Status Settlement</th>
+                <th className="text-center px-3 py-2">Aksi Darurat</th>
               </tr>
             </thead>
             <tbody>
@@ -193,30 +193,30 @@ export default function RevenueAuditPage() {
                   <tr key={item.id} className="group border-b border-outline-variant hover:bg-surface-container/50 transition-colors">
                     
                     {/* Split ID with link to detail */}
-                    <td className="sticky left-0 bg-surface-container-lowest group-hover:bg-surface-container/50 z-10 p-md font-mono text-primary font-bold">
-                      <Link href={`/transactions/${item.id}`} className="hover:underline flex items-center gap-xs">
+                    <td className="sticky left-0 bg-surface-container-lowest group-hover:bg-surface-container/50 z-10 px-3 py-2 font-mono text-primary font-bold">
+                      <Link href={`/transactions/${item.id}`} className="hover:underline flex items-center gap-xs whitespace-nowrap">
                         {item.id} <ArrowUpRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </Link>
                     </td>
 
-                    <td className="p-md text-body-sm text-on-surface font-semibold">{item.vendorName || 'Vendor Partner'}</td>
-                    <td className="p-md text-body-sm text-on-surface-variant">{item.bookingTitle || 'Wedding Service'}</td>
-                    <td className="p-md text-right text-body-sm text-on-surface font-semibold">{formatCurrency(item.grossAmount)}</td>
+                    <td className="px-3 py-2 text-body-sm text-on-surface font-semibold whitespace-nowrap">{item.vendorName || 'Vendor Partner'}</td>
+                    <td className="px-3 py-2 text-body-sm text-on-surface-variant hidden md:table-cell">{item.bookingTitle || 'Wedding Service'}</td>
+                    <td className="px-3 py-2 text-right text-body-sm text-on-surface font-semibold whitespace-nowrap">{formatCurrency(item.grossAmount)}</td>
                     
                     {/* Platform fee */}
-                    <td className="p-md text-right text-body-sm text-primary font-medium">{formatCurrency(item.platformFeeAmount)}</td>
+                    <td className="px-3 py-2 text-right text-body-sm text-primary font-medium hidden lg:table-cell whitespace-nowrap">{formatCurrency(item.platformFeeAmount)}</td>
                     
                     {/* PJP micro-fee */}
-                    <td className="p-md text-right text-body-sm text-on-surface-variant">{formatCurrency(item.microFeeAmount)}</td>
+                    <td className="px-3 py-2 text-right text-body-sm text-on-surface-variant hidden lg:table-cell whitespace-nowrap">{formatCurrency(item.microFeeAmount)}</td>
                     
                     {/* Net payout vendor */}
-                    <td className="p-md text-right text-body-sm text-tertiary font-bold">{formatCurrency(item.netAmount)}</td>
+                    <td className="px-3 py-2 text-right text-body-sm text-tertiary font-bold whitespace-nowrap">{formatCurrency(item.netAmount)}</td>
                     
                     {/* Status */}
-                    <td className="p-md text-center">{getStatusBadge(item.settlementStatus)}</td>
+                    <td className="px-3 py-2 text-center">{getStatusBadge(item.settlementStatus)}</td>
 
                     {/* Actions */}
-                    <td className="p-md text-center">
+                    <td className="px-3 py-2 text-center">
                       {isPendingOrFailed ? (
                         <Button 
                           size="sm"

@@ -70,7 +70,7 @@ export default function LoginPage() {
             </div>
             <div className="space-y-1.5 text-center">
               <p className="text-[10px] tracking-widest uppercase font-semibold text-white/70 2xl:text-xs">
-                SIMPUL Wedding Ecosystem
+                SIMPUL Wedding
               </p>
               <p className="font-heading text-lg lg:text-xl 2xl:text-2xl font-bold text-white tracking-tight max-w-[280px] 2xl:max-w-sm">
                 Admin Dashboard
@@ -139,13 +139,6 @@ export default function LoginPage() {
                   <Label htmlFor="password" className="text-[11px] font-semibold tracking-widest uppercase text-neutral-500 2xl:text-xs">
                     PASSWORD
                   </Label>
-                  <button
-                    type="button"
-                    className="text-xs font-medium text-neutral-400 hover:text-[#8B5A5A] transition-colors cursor-pointer 2xl:text-sm"
-                    onClick={() => {}}
-                  >
-                    Lupa password?
-                  </button>
                 </div>
                 <div className="relative">
                   <input
@@ -177,7 +170,7 @@ export default function LoginPage() {
                   id="remember"
                   checked={rememberMe}
                   onCheckedChange={(v) => setRememberMe(v === true)}
-                  className="h-4 w-4 2xl:h-5 2xl:w-5 rounded-[4px] border-neutral-300 data-[state=checked]:bg-[#8B5A5A] data-[state=checked]:border-[#8B5A5A]"
+                  className="h-5 w-5 2xl:h-5 2xl:w-5 rounded-[5px] border-neutral-300 data-[state=checked]:bg-[#8B5A5A] data-[state=checked]:border-[#8B5A5A]"
                 />
                 <Label htmlFor="remember" className="cursor-pointer text-xs font-normal text-neutral-600 select-none 2xl:text-sm">
                   Ingat sesi login saya
@@ -188,7 +181,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="h-12 2xl:h-14 w-full rounded-md bg-[#8B5A5A] hover:bg-[#774949] active:scale-[0.99] text-xs 2xl:text-sm font-bold tracking-widest uppercase shadow-xs transition-all duration-200 disabled:opacity-60 cursor-pointer"
+                className="h-13 2xl:h-15 w-full rounded-md bg-[#8B5A5A] hover:bg-[#774949] active:scale-[0.99] text-xs 2xl:text-sm font-bold tracking-widest uppercase shadow-xs transition-all duration-200 disabled:opacity-60 cursor-pointer"
               >
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin text-white 2xl:h-5 2xl:w-5" />

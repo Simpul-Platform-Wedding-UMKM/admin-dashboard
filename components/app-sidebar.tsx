@@ -24,6 +24,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from '@/components/ui/sidebar'
 
 const data = {
@@ -92,6 +93,9 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { state } = useSidebar()
+  const isCollapsed = state === 'collapsed'
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -99,18 +103,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5 h-14"
+              className="data-[slot=sidebar-menu-button]:!p-1.5 h-14 justify-center"
             >
               <a href="/dashboard">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground font-semibold text-lg shadow-sm">
-                  S
-                </div>
-                <span className="flex flex-col leading-tight">
-                  <span className="font-heading text-lg font-bold">SIMPUL</span>
-                  <span className="text-xs text-on-surface-variant font-normal">
-                    Admin Platform
-                  </span>
-                </span>
+                <img
+                  src="/images/logo.png"
+                  alt="SIMPUL"
+                  className={`shrink-0 rounded-xl object-contain transition-all duration-200 ease-in-out ${isCollapsed ? 'h-6 w-6' : 'h-8 w-8'}`}
+                />
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

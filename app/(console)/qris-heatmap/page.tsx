@@ -6,10 +6,10 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { 
-  Map as MapIcon, 
-  MapPin, 
-  TrendingUp, 
+import {
+  Map as MapIcon,
+  MapPin,
+  TrendingUp,
   CreditCard,
   Building,
   Filter,
@@ -99,10 +99,10 @@ export default function QrisHeatmapPage() {
   const [points, setPoints] = useState<HeatmapPoint[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  
+
   const [selectedKecamatan, setSelectedKecamatan] = useState<string>('ALL')
   const [leafletLoaded, setLeafletLoaded] = useState(false)
-  
+
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
   const circlesRef = useRef<any[]>([])
@@ -217,7 +217,7 @@ export default function QrisHeatmapPage() {
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Peta Kepadatan QRIS (Heatmap)</h1>
           <p className="text-body-md text-on-surface-variant">Visualisasi spasial kepadatan transaksi dan persebaran volume QRIS per Kecamatan di Banyumas</p>
         </div>
-        
+
         {/* Refresh button */}
         <Button variant="outline" size="sm" onClick={fetchHeatmapData} disabled={loading} className="gap-xs">
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} /> Sinkronkan Data
@@ -229,10 +229,10 @@ export default function QrisHeatmapPage() {
         <div className="flex items-center gap-xs text-label-md text-on-surface-variant">
           <Filter className="h-4 w-4 text-primary" /> Filter Lokasi Kecamatan
         </div>
-        
+
         {/* Dropdown Selector */}
         <div className="relative w-full sm:w-80">
-          <select 
+          <select
             value={selectedKecamatan}
             onChange={(e) => setSelectedKecamatan(e.target.value)}
             className="w-full bg-surface-container border border-outline-variant text-on-surface rounded-md px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-tertiary"
@@ -247,10 +247,10 @@ export default function QrisHeatmapPage() {
 
       {/* Grid Dashboard Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-md">
-        
+
         {/* Left Side: Summary Metrics */}
         <div className="lg:col-span-1 space-y-md flex flex-col justify-start">
-          
+
           {/* Card: Total Volume */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
             <div className="flex justify-between items-start">
@@ -283,7 +283,7 @@ export default function QrisHeatmapPage() {
 
           {/* Card: Density Legend */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-            <h4 className="text-label-sm text-on-surface font-semibold uppercase mb-sm pb-xs border-b border-outline-variant">Tingkat Kepadatan Trx</h4>
+            <h4 className="text-label-sm text-on-surface font-semibold uppercase mb-sm pb-xs border-b border-outline-variant">Tingkat Kepadatan Transaksi</h4>
             <div className="space-y-xs">
               <div className="flex items-center gap-sm">
                 <span className="inline-block h-3.5 w-3.5 rounded-full bg-error"></span>
@@ -308,11 +308,11 @@ export default function QrisHeatmapPage() {
         {/* Right Side: Map Viewer */}
         <div className="lg:col-span-3">
           <Card className="p-md bg-surface-container-lowest border border-outline-variant h-full min-h-[500px] flex flex-col justify-between">
-            <div className="flex justify-between items-center mb-sm pb-xs border-b border-outline-variant">
-              <h3 className="text-headline-md text-on-surface font-semibold flex items-center gap-xs">
-                <MapIcon className="h-5 w-5 text-primary" /> Peta Persebaran Spasial Banyumas
+            <div className="flex justify-between items-center mb-sm pb-xs border-b border-outline-variant gap-sm">
+              <h3 className="min-w-0 flex-1 text-title-lg text-on-surface font-semibold flex items-center gap-xs whitespace-nowrap overflow-hidden text-ellipsis">
+                <MapIcon className="h-5 w-5 shrink-0 text-primary" /> Peta Persebaran Spasial Banyumas
               </h3>
-              <Badge className="bg-surface-container text-on-surface font-mono text-xs">
+              <Badge className="shrink-0 bg-surface-container text-on-surface font-mono text-xs">
                 {selectedKecamatan === 'ALL' ? 'Mode Nasional/Regonal' : selectedKecamatan}
               </Badge>
             </div>

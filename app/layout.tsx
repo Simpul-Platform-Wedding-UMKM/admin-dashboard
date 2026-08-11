@@ -4,11 +4,11 @@ import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
-const plusJakarta = Plus_Jakarta_Sans({ 
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   variable: '--font-heading',
 });
-const dmSans = DM_Sans({ 
+const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
 });
@@ -16,7 +16,6 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: 'SIMPUL Admin Dashboard',
   description: 'Admin panel for SIMPUL platform management',
-  generator: 'v0.app',
   icons: {
     icon: [
       {

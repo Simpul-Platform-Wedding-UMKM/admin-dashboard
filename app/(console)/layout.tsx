@@ -15,7 +15,7 @@ export default function DashboardLayout({
       style={
         {
           "--sidebar-width": "16rem",
-          "--header-height": "3.5rem",
+          "--header-height": "3.8rem",
         } as React.CSSProperties
       }
     >
@@ -26,7 +26,7 @@ export default function DashboardLayout({
             Padding diatur per-halaman (p-lg md:p-xl) supaya tidak dobel. */}
         <div className="flex flex-1 flex-col overflow-hidden bg-[#FBF7F6]">
           <div className="flex-1 overflow-auto">
-            <div className="mx-auto w-full max-w-[1280px] pt-6">
+            <div className="mx-auto w-full max-w-[1280px]">
               {children}
             </div>
           </div>

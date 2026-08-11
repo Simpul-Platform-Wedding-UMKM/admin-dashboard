@@ -34,21 +34,21 @@ export function SiteHeader() {
   const router = useRouter()
   const { toast } = useToast()
   const [isPending, startTransition] = useTransition()
-  
+
   // States for search
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  
+
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
   }, [])
-  
+
   // States for Quick Action Modals
   const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false)
   const [isAdminOpen, setIsAdminOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
+
   // Form states
   const [announcementData, setAnnouncementData] = useState({
     title: '',
@@ -56,7 +56,7 @@ export function SiteHeader() {
     category: 'INFO',
     target: 'ALL',
   })
-  
+
   const [adminData, setAdminData] = useState({
     name: '',
     email: '',
@@ -237,8 +237,8 @@ export function SiteHeader() {
 
           {/* Full search bar from sm breakpoint up */}
           <div className="hidden flex-1 max-w-md sm:block relative">
-            <div className="flex items-center gap-2.5 h-11 rounded-xl border border-outline-variant bg-surface-container px-3.5 focus-within:ring-2 focus-within:ring-primary">
-              <Search className="h-4 w-4 shrink-0 text-on-surface-variant" />
+            <div className="flex items-center gap-2.5 h-10 rounded-lg border border-outline-variant bg-surface-container px-3.5 focus-within:ring-2 focus-within:ring-primary">
+              <Search className="h-3 w-3 shrink-0 text-on-surface-variant" />
               <input
                 type="search"
                 value={searchQuery}
