@@ -133,7 +133,7 @@ export default function AIAnalyticsPage() {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-sm gap-xs">
                     <div>
                       <p className="text-body-md text-on-surface font-bold">{log.topic}</p>
-                      <p className="text-label-xs text-on-surface-variant">Vendor ID: {log.vendorId} &bull; Peran Bot: {getQueryTypeLabel(log.queryType)}</p>
+                      <p className="text-label-xs text-on-surface-variant">Peran Bot: {getQueryTypeLabel(log.queryType)}</p>
                     </div>
                     <div className="text-left sm:text-right shrink-0">
                       <p className="text-body-sm text-tertiary font-semibold">Akurasi: {(log.confidence * 100).toFixed(0)}%</p>

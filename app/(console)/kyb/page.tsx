@@ -228,7 +228,6 @@ export default function KYBVerificationPage() {
                   <div className="flex items-start justify-between gap-sm">
                     <div className="min-w-0">
                       <p className="text-body-md text-on-surface font-semibold truncate">{v.businessName}</p>
-                      <p className="text-label-sm text-on-surface-variant">{v.vendorId}</p>
                       <p className="text-label-sm text-on-surface-variant mt-1">{v.category} &bull; {v.region}</p>
                     </div>
                     {getStatusBadge(v.status)}
@@ -279,7 +278,6 @@ export default function KYBVerificationPage() {
                     {/* Vendor info */}
                     <td className="p-md max-w-0">
                       <p className="text-body-md text-on-surface font-semibold truncate">{v.businessName}</p>
-                      <p className="text-label-sm text-on-surface-variant">{v.vendorId}</p>
                     </td>
                     {/* Category */}
                     <td className="p-md hidden lg:table-cell">

@@ -143,7 +143,9 @@ export default function TransactionsPage() {
                       {split.id}
                     </Link>
                   </td>
-                  <td className="p-md text-body-sm text-on-surface">{split.bookingItemId}</td>
+                  <td className="p-md text-body-sm text-on-surface">
+                    {(split as any).serviceName || split.bookingItemId}
+                  </td>
                   <td className="p-md text-right text-body-sm text-on-surface">Rp {(split.grossAmount / 1e6).toFixed(0)}M</td>
                   <td className="p-md text-right text-body-sm text-on-surface-variant">Rp {(split.microFeeAmount / 1e3).toFixed(0)}K</td>
                   <td className="p-md text-right text-body-sm text-on-surface-variant">Rp {(split.platformFeeAmount / 1e3).toFixed(0)}K</td>

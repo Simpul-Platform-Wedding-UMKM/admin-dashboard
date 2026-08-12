@@ -110,14 +110,14 @@ export default function UserRoleManagementPage() {
       <Card className="p-md bg-surface-container-lowest border border-outline-variant w-full max-w-full overflow-hidden">
         <h2 className="text-headline-md text-on-surface font-semibold mb-md">Daftar Pengguna Sistem</h2>
         <div className="overflow-x-auto w-full">
-          <table className="w-full min-w-[700px]">
+          <table className="w-full min-w-[620px]">
             <thead>
               <tr className="border-b border-outline-variant">
                 <th className="sticky left-0 z-10 bg-surface-container-lowest text-left p-md text-label-md text-on-surface font-semibold">Nama Lengkap</th>
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Email</th>
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Peran Akses</th>
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Status</th>
-                <th className="text-left p-md text-label-md text-on-surface font-semibold">Login Terakhir</th>
+                <th className="text-left p-md text-label-md text-on-surface font-semibold hidden lg:table-cell">Login Terakhir</th>
                 <th className="text-center p-md text-label-md text-on-surface font-semibold">Aksi</th>
               </tr>
             </thead>
@@ -137,7 +137,7 @@ export default function UserRoleManagementPage() {
                 users.map((user) => (
                   <tr key={user.id} className="group border-b border-outline-variant hover:bg-surface-container transition-colors">
                     <td className="sticky left-0 z-10 bg-surface-container-lowest group-hover:bg-surface-container p-md text-body-md text-on-surface font-medium">{user.name}</td>
-                    <td className="p-md text-body-md text-on-surface-variant font-mono text-xs">{user.email}</td>
+                    <td className="p-md text-body-md text-on-surface-variant font-mono text-xs max-w-0 truncate">{user.email}</td>
                     <td className="p-md">
                       <Badge className={getRoleColor(user.role)}>
                         {getRoleLabel(user.role)}
@@ -148,7 +148,7 @@ export default function UserRoleManagementPage() {
                         {user.isActive ? 'Aktif' : 'Nonaktif'}
                       </Badge>
                     </td>
-                    <td className="p-md text-body-sm text-on-surface-variant">
+                    <td className="p-md text-body-sm text-on-surface-variant hidden lg:table-cell whitespace-nowrap">
                       {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Belum Pernah'}
                     </td>
                     <td className="p-md text-center">

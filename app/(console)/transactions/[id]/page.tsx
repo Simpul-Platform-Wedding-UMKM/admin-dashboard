@@ -375,7 +375,7 @@ export default function TransactionDetailPage() {
             <div className="space-y-sm">
               <div>
                 <p className="text-label-sm text-on-surface-variant uppercase">Nama Item Booking</p>
-                <p className="text-body-md text-on-surface font-semibold">{split.bookingTitle || split.bookingItemId}</p>
+                <p className="text-body-md text-on-surface font-semibold">{(split as any).serviceName || split.bookingItemId}</p>
               </div>
 
               <div className="pt-xs border-t border-outline-variant space-y-sm">

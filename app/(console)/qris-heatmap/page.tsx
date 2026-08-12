@@ -17,7 +17,7 @@ import {
   Search,
   DollarSign
 } from 'lucide-react'
-import { formatCurrency } from '@/lib/utils-simpul'
+import { formatNumber } from '@/lib/utils-simpul'
 import type { HeatmapPoint } from '@/lib/dummyData'
 
 // List of all 27 sub-districts for the dropdown filter option
@@ -261,7 +261,7 @@ export default function QrisHeatmapPage() {
               <p className="text-label-sm text-on-surface-variant uppercase">Total Volume QRIS</p>
               <TrendingUp className="h-4 w-4 text-primary" />
             </div>
-            <p className="text-headline-md text-on-surface font-bold mt-xs">{formatCurrency(totalVolume)}</p>
+            <p className="text-headline-md text-on-surface font-bold mt-xs break-words">{formatNumber(totalVolume)}</p>
             <p className="text-label-sm text-on-surface-variant mt-xs">Total nominal checkout sukses</p>
           </Card>
 
@@ -281,7 +281,7 @@ export default function QrisHeatmapPage() {
               <p className="text-label-sm text-on-surface-variant uppercase">Rata-Rata Tiket</p>
               <Building className="h-4 w-4 text-tertiary" />
             </div>
-            <p className="text-headline-md text-on-surface font-bold mt-xs">{formatCurrency(averageTransaction)}</p>
+            <p className="text-headline-md text-on-surface font-bold mt-xs break-words">{formatNumber(averageTransaction)}</p>
             <p className="text-label-sm text-on-surface-variant mt-xs">Nilai rata-rata per transaksi</p>
           </Card>
 

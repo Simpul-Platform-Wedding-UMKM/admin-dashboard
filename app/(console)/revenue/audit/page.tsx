@@ -170,10 +170,10 @@ export default function RevenueAuditPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[840px] text-sm">
+          <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="border-b border-outline-variant text-label-md text-on-surface font-semibold">
-                <th className="text-left px-3 py-2 sticky left-0 bg-surface-container-lowest z-10">Split ID</th>
+                <th className="text-left px-3 py-2 sticky left-0 bg-surface-container-lowest z-10 shadow-[2px_0_0_-1px_var(--md-sys-color-outline-variant)]">Split ID</th>
                 <th className="text-left px-3 py-2">Nama Vendor</th>
                 <th className="text-left px-3 py-2 hidden md:table-cell">Paket Resepsi</th>
                 <th className="text-right px-3 py-2">Gross Amount</th>
@@ -192,15 +192,15 @@ export default function RevenueAuditPage() {
                 return (
                   <tr key={item.id} className="group border-b border-outline-variant hover:bg-surface-container/50 transition-colors">
                     
-                    {/* Split ID with link to detail */}
-                    <td className="sticky left-0 bg-surface-container-lowest group-hover:bg-surface-container/50 z-10 px-3 py-2 font-mono text-primary font-bold">
+                    {/* Split ID with link to detail — sticky dengan background SOLID (anti tembus saat scroll) */}
+                    <td className="sticky left-0 bg-surface-container-lowest group-hover:bg-surface-container z-10 px-3 py-2 font-mono text-primary font-bold shadow-[2px_0_0_-1px_var(--md-sys-color-outline-variant)]">
                       <Link href={`/transactions/${item.id}`} className="hover:underline flex items-center gap-xs whitespace-nowrap">
                         {item.id} <ArrowUpRight className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </Link>
                     </td>
 
                     <td className="px-3 py-2 text-body-sm text-on-surface font-semibold whitespace-nowrap">{item.vendorName || 'Vendor Partner'}</td>
-                    <td className="px-3 py-2 text-body-sm text-on-surface-variant hidden md:table-cell">{item.bookingTitle || 'Wedding Service'}</td>
+                    <td className="px-3 py-2 text-body-sm text-on-surface-variant hidden md:table-cell">{(item as any).serviceName || 'Wedding Service'}</td>
                     <td className="px-3 py-2 text-right text-body-sm text-on-surface font-semibold whitespace-nowrap">{formatCurrency(item.grossAmount)}</td>
                     
                     {/* Platform fee */}

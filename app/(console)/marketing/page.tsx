@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Star, AlertCircle, Sparkles } from 'lucide-react'
-import { formatCurrency } from '@/lib/utils-simpul'
+import { formatCurrency, formatNumber } from '@/lib/utils-simpul'
 
 export default function MarketingFeaturedPage() {
   const [featuredSlots, setFeaturedSlots] = useState<FeaturedSlot[]>([])
@@ -81,7 +81,7 @@ export default function MarketingFeaturedPage() {
             </Card>
             <Card className="p-md bg-surface-container-lowest border border-outline-variant">
               <p className="text-label-sm text-on-surface-variant mb-xs">Total Omzet Promo</p>
-              <p className="text-headline-lg text-primary font-bold">{formatCurrency(totalRevenue)}</p>
+              <p className="text-headline-lg text-primary font-bold break-words">{formatNumber(totalRevenue)}</p>
             </Card>
             <Card className="p-md bg-surface-container-lowest border border-outline-variant">
               <p className="text-label-sm text-on-surface-variant mb-xs">Vendor Premium</p>
