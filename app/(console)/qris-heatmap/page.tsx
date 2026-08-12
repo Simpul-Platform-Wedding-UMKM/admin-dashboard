@@ -160,6 +160,10 @@ export default function QrisHeatmapPage() {
         const map = mapInstanceRef.current
         if (!map) return
 
+        // Fix: Leaflet kadang ter-init saat container belum punya ukuran —
+        // invalidateSize memaksa map menghitung ulang dimensi container.
+        setTimeout(() => map.invalidateSize(), 100)
+
         // Clear existing markers/circles
         circlesRef.current.forEach(c => c.remove())
         circlesRef.current = []
@@ -319,7 +323,7 @@ export default function QrisHeatmapPage() {
 
             {/* Map Area */}
             <div className="relative w-full flex-1 min-h-[420px] rounded-md overflow-hidden border border-outline-variant bg-surface-container">
-              <div ref={mapRef} className="w-full h-full z-0" />
+              <div ref={mapRef} className="absolute inset-0 z-0" style={{ minHeight: 420 }} />
               {!leafletLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-surface-container/85 gap-sm">
                   <Skeleton className="h-4 w-4 rounded-full animate-pulse bg-primary" />
