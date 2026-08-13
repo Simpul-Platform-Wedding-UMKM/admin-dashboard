@@ -30,10 +30,11 @@ export default function TransactionsPage() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      'PENDING': 'bg-tertiary-container text-on-tertiary-container',
-      'HOLDING': 'bg-tertiary text-on-tertiary',
-      'RELEASED': 'bg-tertiary text-on-tertiary',
+      'PENDING': 'bg-surface-container-high text-on-surface-variant',
+      'PAID': 'bg-primary-container text-on-primary-container',
+      'EXPIRED': 'bg-surface-container text-on-surface-variant',
       'FAILED': 'bg-error text-on-error',
+      'CANCELLED': 'bg-surface-container text-on-surface-variant',
     }
     return colors[status] || 'bg-surface-container text-on-surface'
   }
@@ -110,12 +111,12 @@ export default function TransactionsPage() {
           <p className="text-headline-lg text-primary font-semibold">Rp {(splits.reduce((sum, s) => sum + s.grossAmount, 0) / 1e9).toFixed(1)}B</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-          <p className="text-label-sm text-on-surface-variant mb-xs">Holding</p>
-          <p className="text-headline-lg text-tertiary font-semibold">{splits.filter(s => s.status === 'HOLDING').length}</p>
+          <p className="text-label-sm text-on-surface-variant mb-xs">Pending</p>
+          <p className="text-headline-lg text-on-surface font-semibold">{splits.filter(s => s.status === 'PENDING').length}</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-          <p className="text-label-sm text-on-surface-variant mb-xs">Released</p>
-          <p className="text-headline-lg text-tertiary font-semibold">{splits.filter(s => s.status === 'RELEASED').length}</p>
+          <p className="text-label-sm text-on-surface-variant mb-xs">Paid</p>
+          <p className="text-headline-lg text-primary font-semibold">{splits.filter(s => s.status === 'PAID').length}</p>
         </Card>
       </div>
 

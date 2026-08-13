@@ -21,7 +21,7 @@ import {
   Building
 } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils-simpul'
-import type { ExtendedPaymentSplit } from '@/lib/dummyData'
+import type { ExtendedPaymentSplit } from '@/lib/types'
 
 // ponytail: resolve CSS var to hex for Leaflet
 function cssVar(varName: string): string {
@@ -271,10 +271,10 @@ export default function TransactionDetailPage() {
           <div className="flex items-center gap-sm mb-xs">
             <h1 className="font-heading text-headline-lg text-on-surface font-bold">Split ID: {split.id}</h1>
             <Badge className={
-              split.status === 'RELEASED'
-                ? 'bg-tertiary-container text-on-tertiary-container'
-                : split.status === 'HOLDING'
-                  ? 'bg-tertiary text-on-tertiary'
+              split.status === 'PAID'
+                ? 'bg-primary-container text-on-primary-container'
+                : split.status === 'PENDING'
+                  ? 'bg-surface-container-high text-on-surface-variant'
                   : 'bg-error text-on-error'
             }>
               {split.status}
@@ -433,9 +433,11 @@ export default function TransactionDetailPage() {
                 <div>
                   <p className="text-label-sm text-on-surface-variant uppercase">Status Payout Bank</p>
                   <Badge className={
-                    split.settlementStatus === 'COMPLETED'
-                      ? 'bg-tertiary-container text-on-tertiary-container'
-                      : 'bg-tertiary text-on-tertiary'
+                    split.settlementStatus === 'SETTLED'
+                      ? 'bg-primary-container text-on-primary-container'
+                      : split.settlementStatus === 'FAILED'
+                        ? 'bg-error text-on-error'
+                        : 'bg-surface-container-high text-on-surface-variant'
                   }>
                     {split.settlementStatus}
                   </Badge>

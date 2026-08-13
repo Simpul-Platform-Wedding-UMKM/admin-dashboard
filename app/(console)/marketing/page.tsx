@@ -180,9 +180,6 @@ export default function MarketingFeaturedPage() {
                     <p>Total Omzet Mitra: <span className="font-semibold text-on-surface">{formatCurrency(vendor.totalRevenue)}</span></p>
                   </div>
                 </div>
-                <button className="w-full py-2 px-sm bg-primary text-on-primary rounded-md text-label-sm font-semibold hover:opacity-90 transition-opacity">
-                  Promosikan ke Unggulan
-                </button>
               </Card>
             ))
           )}

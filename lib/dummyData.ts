@@ -2,7 +2,7 @@ import {
   Vendor, 
   VendorStatus, 
   PaymentSplit, 
-  PaymentSplitStatus, 
+  PaymentStatus, 
   SettlementStatus, 
   Dispute, 
   DisputeStatus,
@@ -162,8 +162,8 @@ const INITIAL_SPLITS: ExtendedPaymentSplit[] = [
     microFeeAmount: 75000,    // 0.5%
     platformFeeAmount: 150000, // 1%
     netAmount: 14775000,
-    status: PaymentSplitStatus.RELEASED,
-    settlementStatus: SettlementStatus.COMPLETED,
+    status: PaymentStatus.PAID,
+    settlementStatus: SettlementStatus.SETTLED,
     qrisCode: 'qris_code_dummy_1',
     transactionId: 'trx-101',
     pjpProvider: 'MIDTRANS',
@@ -188,7 +188,7 @@ const INITIAL_SPLITS: ExtendedPaymentSplit[] = [
     microFeeAmount: 175000,
     platformFeeAmount: 350000,
     netAmount: 34475000,
-    status: PaymentSplitStatus.HOLDING,
+    status: PaymentStatus.PENDING,
     settlementStatus: SettlementStatus.PENDING,
     qrisCode: 'qris_code_dummy_2',
     transactionId: 'trx-102',

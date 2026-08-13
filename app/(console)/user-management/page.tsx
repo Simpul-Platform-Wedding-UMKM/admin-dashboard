@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { Edit, Trash2, Plus, AlertCircle, ShieldCheck } from 'lucide-react'
+import { AlertCircle, ShieldCheck } from 'lucide-react'
 
 export default function UserRoleManagementPage() {
   const [users, setUsers] = useState<SystemUser[]>([])
@@ -58,10 +58,6 @@ export default function UserRoleManagementPage() {
           <h1 className="font-heading text-headline-lg text-on-surface font-bold">Manajemen Pengguna & Peran</h1>
           <p className="text-body-md text-on-surface-variant">Kelola akun admin internal, izin akses keamanan, dan otorisasi peran.</p>
         </div>
-        <button className="px-md py-sm bg-primary text-on-primary rounded-md font-semibold text-label-md hover:opacity-90 transition-opacity flex items-center gap-xs w-full sm:w-auto justify-center">
-          <Plus className="w-4 h-4" />
-          Tambah Pengguna
-        </button>
       </div>
 
       {/* Role Summary */}
@@ -117,8 +113,7 @@ export default function UserRoleManagementPage() {
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Email</th>
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Peran Akses</th>
                 <th className="text-left p-md text-label-md text-on-surface font-semibold">Status</th>
-                <th className="text-left p-md text-label-md text-on-surface font-semibold hidden lg:table-cell">Login Terakhir</th>
-                <th className="text-center p-md text-label-md text-on-surface font-semibold">Aksi</th>
+                <th className="text-left p-md text-label-md text-on-surface font-semibold">Login Terakhir</th>
               </tr>
             </thead>
             <tbody>
@@ -130,7 +125,6 @@ export default function UserRoleManagementPage() {
                     <td className="p-md"><Skeleton className="h-6 w-24 rounded-full" /></td>
                     <td className="p-md"><Skeleton className="h-6 w-20 rounded-full" /></td>
                     <td className="p-md"><Skeleton className="h-5 w-28" /></td>
-                    <td className="p-md"><div className="flex items-center justify-center gap-xs"><Skeleton className="h-8 w-8 rounded" /><Skeleton className="h-8 w-8 rounded" /></div></td>
                   </tr>
                 ))
               ) : error ? null : (
@@ -150,16 +144,6 @@ export default function UserRoleManagementPage() {
                     </td>
                     <td className="p-md text-body-sm text-on-surface-variant hidden lg:table-cell whitespace-nowrap">
                       {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Belum Pernah'}
-                    </td>
-                    <td className="p-md text-center">
-                      <div className="flex items-center justify-center gap-xs">
-                        <button className="p-xs hover:bg-surface-container rounded transition-colors" title="Edit">
-                          <Edit className="w-4 h-4 text-primary" />
-                        </button>
-                        <button className="p-xs hover:bg-surface-container rounded transition-colors" title="Hapus">
-                          <Trash2 className="w-4 h-4 text-error" />
-                        </button>
-                      </div>
                     </td>
                   </tr>
                 ))

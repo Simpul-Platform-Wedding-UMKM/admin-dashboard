@@ -14,54 +14,42 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Bell, Search, LogOut, UserCircle, X, Mail, Plus, Building, CreditCard } from 'lucide-react'
+import { Bell, Search, LogOut, UserCircle, X, Mail, Building, CreditCard } from 'lucide-react'
 import { clearSession, getSession } from '@/lib/session'
-import { useToast } from '@/components/ui/use-toast'
-import { dummyDb } from '@/lib/dummyData'
+import { getVendors } from '@/lib/services/vendor'
+import { getPaymentSplits } from '@/lib/services/payment'
+import type { Vendor, PaymentSplit } from '@/lib/types'
 import { formatCurrency } from '@/lib/utils-simpul'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 
 export function SiteHeader() {
   const router = useRouter()
-  const { toast } = useToast()
   const [isPending, startTransition] = useTransition()
 
   // States for search
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
+  // Search result data fetched from real API
+  const [vendors, setVendors] = useState<Vendor[]>([])
+  const [splits, setSplits] = useState<PaymentSplit[]>([])
+
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // States for Quick Action Modals
-  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false)
-  const [isAdminOpen, setIsAdminOpen] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Form states
-  const [announcementData, setAnnouncementData] = useState({
-    title: '',
-    content: '',
-    category: 'INFO',
-    target: 'ALL',
-  })
-
-  const [adminData, setAdminData] = useState({
-    name: '',
-    email: '',
-    role: 'ADMIN',
-  })
+  // Load search index once on mount (real API, not mock)
+  useEffect(() => {
+    let active = true
+    Promise.allSettled([getVendors(), getPaymentSplits()]).then(([v, s]) => {
+      if (!active) return
+      if (v.status === 'fulfilled') setVendors(v.value)
+      if (s.status === 'fulfilled') setSplits(s.value)
+    })
+    return () => {
+      active = false
+    }
+  }, [])
 
   const session = getSession()
 
@@ -70,17 +58,14 @@ export function SiteHeader() {
     router.push('/login')
   }
 
-  // Fetch search results from mock database
+  // Filter search results from real API data
   const query = searchQuery.trim().toLowerCase()
-  const vendors = dummyDb.getVendors()
-  const splits = dummyDb.getPaymentSplits()
-
   const matchingVendors = query
     ? vendors.filter(
         (v) =>
-          v.name.toLowerCase().includes(query) ||
-          v.businessName.toLowerCase().includes(query) ||
-          v.businessType.toLowerCase().includes(query)
+          v.name?.toLowerCase().includes(query) ||
+          v.businessName?.toLowerCase().includes(query) ||
+          v.businessType?.toLowerCase().includes(query)
       )
     : []
 
@@ -89,8 +74,7 @@ export function SiteHeader() {
         (s) =>
           s.id.toLowerCase().includes(query) ||
           (s.transactionId && s.transactionId.toLowerCase().includes(query)) ||
-          (s.vendorName && s.vendorName.toLowerCase().includes(query)) ||
-          (s.bookingTitle && s.bookingTitle.toLowerCase().includes(query))
+          (s.bookingItemId && s.bookingItemId.toLowerCase().includes(query))
       )
     : []
 
@@ -102,36 +86,6 @@ export function SiteHeader() {
     startTransition(() => {
       router.push(url)
     })
-  }
-
-  const handleAnnouncementSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    // ponytail: Simulating API delay for announcement publishing
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsAnnouncementOpen(false)
-      setAnnouncementData({ title: '', content: '', category: 'INFO', target: 'ALL' })
-      toast({
-        title: 'Pengumuman Diterbitkan',
-        description: 'Pengumuman baru berhasil dipublikasikan di platform.',
-      })
-    }, 1200)
-  }
-
-  const handleAdminSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    // ponytail: Simulating API delay for admin account creation
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsAdminOpen(false)
-      setAdminData({ name: '', email: '', role: 'ADMIN' })
-      toast({
-        title: 'Admin Ditambahkan',
-        description: `Akun administrator baru untuk ${adminData.name} berhasil dibuat.`,
-      })
-    }, 1200)
   }
 
   // Common Search Results Dropdown component
@@ -186,7 +140,7 @@ export function SiteHeader() {
                       <CreditCard className="h-4 w-4 shrink-0 text-tertiary" />
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-on-surface truncate">
-                          {split.bookingTitle || 'Transaksi Tanpa Judul'}
+                          {split.bookingItemId || 'Transaksi Tanpa Judul'}
                         </p>
                         <p className="text-label-xs text-on-surface-variant truncate">
                           ID: {split.id} &bull; {formatCurrency(split.grossAmount)}
@@ -261,41 +215,6 @@ export function SiteHeader() {
           </Button>
 
           <div className="ml-auto flex items-center gap-2">
-            {/* Quick Actions Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="hidden md:flex gap-1 items-center border-primary/20 hover:border-primary/40 bg-surface-container-low text-on-surface">
-                  <Plus className="h-4 w-4 text-primary" />
-                  <span>Buat Baru</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => setIsAnnouncementOpen(true)}>
-                  Buat Pengumuman
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setIsAdminOpen(true)}>
-                  Tambah Admin
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Quick Actions Mobile Trigger */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-2 h-auto md:hidden" aria-label="Buat Baru">
-                  <Plus className="h-5 w-5 text-on-surface" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => setIsAnnouncementOpen(true)}>
-                  Buat Pengumuman
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setIsAdminOpen(true)}>
-                  Tambah Admin
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             {/* Helpdesk Inbox Icon */}
             <Button
               variant="ghost"
@@ -355,130 +274,6 @@ export function SiteHeader() {
           </div>
         </div>
       </header>
-
-      {/* Modal: Buat Pengumuman */}
-      <Dialog open={isAnnouncementOpen} onOpenChange={setIsAnnouncementOpen}>
-        <DialogContent className="sm:max-w-md bg-surface-container-lowest border border-outline-variant text-on-surface">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-headline-sm font-semibold">Buat Pengumuman Baru</DialogTitle>
-            <DialogDescription className="text-body-sm text-on-surface-variant">
-              Terbitkan pengumuman resmi ke seluruh platform SIMPUL.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleAnnouncementSubmit} className="space-y-4 py-2">
-            <div className="space-y-1">
-              <label className="text-label-sm font-medium text-on-surface">Judul Pengumuman</label>
-              <Input
-                required
-                placeholder="Masukkan judul pengumuman..."
-                value={announcementData.title}
-                onChange={(e) => setAnnouncementData({ ...announcementData, title: e.target.value })}
-                className="bg-surface-container border border-outline-variant text-on-surface focus-visible:ring-primary"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-label-sm font-medium text-on-surface">Konten Pengumuman</label>
-              <Textarea
-                required
-                rows={3}
-                placeholder="Tulis pesan pengumuman di sini..."
-                value={announcementData.content}
-                onChange={(e) => setAnnouncementData({ ...announcementData, content: e.target.value })}
-                className="bg-surface-container border border-outline-variant text-on-surface resize-none focus-visible:ring-primary"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-label-sm font-medium text-on-surface">Kategori</label>
-                <select
-                  className="w-full h-10 px-3 rounded-md border border-outline-variant bg-surface-container text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  value={announcementData.category}
-                  onChange={(e) => setAnnouncementData({ ...announcementData, category: e.target.value })}
-                >
-                  <option value="INFO">Informasi</option>
-                  <option value="ALERT">Penting</option>
-                  <option value="PROMO">Promosi</option>
-                </select>
-              </div>
-              <div className="space-y-1">
-                <label className="text-label-sm font-medium text-on-surface">Target Penerima</label>
-                <select
-                  className="w-full h-10 px-3 rounded-md border border-outline-variant bg-surface-container text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                  value={announcementData.target}
-                  onChange={(e) => setAnnouncementData({ ...announcementData, target: e.target.value })}
-                >
-                  <option value="ALL">Semua Pengguna</option>
-                  <option value="VENDOR">Hanya Vendor</option>
-                  <option value="BUYER">Hanya Pengantin</option>
-                </select>
-              </div>
-            </div>
-            <DialogFooter className="pt-2 gap-2 sm:gap-none">
-              <Button type="button" variant="outline" onClick={() => setIsAnnouncementOpen(false)}>
-                Batal
-              </Button>
-              <Button type="submit" disabled={isSubmitting} className="bg-primary text-primary-foreground hover:bg-primary/90">
-                {isSubmitting ? 'Mengirim...' : 'Terbitkan Pengumuman'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal: Tambah Admin */}
-      <Dialog open={isAdminOpen} onOpenChange={setIsAdminOpen}>
-        <DialogContent className="sm:max-w-md bg-surface-container-lowest border border-outline-variant text-on-surface">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-headline-sm font-semibold">Tambah Admin Baru</DialogTitle>
-            <DialogDescription className="text-body-sm text-on-surface-variant">
-              Buat akun akses admin internal SIMPUL yang baru.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleAdminSubmit} className="space-y-4 py-2">
-            <div className="space-y-1">
-              <label className="text-label-sm font-medium text-on-surface">Nama Lengkap</label>
-              <Input
-                required
-                placeholder="Nama lengkap admin..."
-                value={adminData.name}
-                onChange={(e) => setAdminData({ ...adminData, name: e.target.value })}
-                className="bg-surface-container border border-outline-variant text-on-surface focus-visible:ring-primary"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-label-sm font-medium text-on-surface">Alamat Email</label>
-              <Input
-                required
-                type="email"
-                placeholder="nama@simpul.com"
-                value={adminData.email}
-                onChange={(e) => setAdminData({ ...adminData, email: e.target.value })}
-                className="bg-surface-container border border-outline-variant text-on-surface focus-visible:ring-primary"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-label-sm font-medium text-on-surface">Peran Akses</label>
-              <select
-                className="w-full h-10 px-3 rounded-md border border-outline-variant bg-surface-container text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                value={adminData.role}
-                onChange={(e) => setAdminData({ ...adminData, role: e.target.value })}
-              >
-                <option value="ADMIN">Admin Verifikator</option>
-                <option value="FINANCE">Admin Keuangan</option>
-                <option value="SUPER_ADMIN">Super Admin</option>
-              </select>
-            </div>
-            <DialogFooter className="pt-2 gap-2 sm:gap-none">
-              <Button type="button" variant="outline" onClick={() => setIsAdminOpen(false)}>
-                Batal
-              </Button>
-              <Button type="submit" disabled={isSubmitting} className="bg-primary text-primary-foreground hover:bg-primary/90">
-                {isSubmitting ? 'Menambahkan...' : 'Tambah Admin'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
     </>
   )
 }

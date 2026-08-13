@@ -17,12 +17,8 @@ export const metadata: Metadata = {
   title: 'SIMPUL Admin Dashboard',
   description: 'Admin panel for SIMPUL platform management',
   icons: {
-    icon: [
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
+    icon: '/images/logo.png',
+    apple: '/images/logo.png',
   },
 }
 

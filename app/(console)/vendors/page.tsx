@@ -5,7 +5,7 @@ import { getVendors } from '@/lib/services/vendor'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { AlertCircle, Eye, Ban, Check, Search } from 'lucide-react'
+import { AlertCircle, Eye, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { Vendor } from '@/lib/types'
 import { VendorDetailDrawer } from '@/components/vendors/vendor-detail-drawer'
@@ -186,16 +186,6 @@ export default function VendorManagementPage() {
                       >
                         <Eye className="w-4 h-4 text-primary" />
                       </button>
-                      {vendor.status === 'ACTIVE' && (
-                        <button className="p-xs hover:bg-surface-container rounded transition-colors" title="Suspend">
-                          <Ban className="w-4 h-4 text-error" />
-                        </button>
-                      )}
-                      {vendor.status === 'PENDING' && (
-                        <button className="p-xs hover:bg-surface-container rounded transition-colors" title="Approve">
-                          <Check className="w-4 h-4 text-tertiary" />
-                        </button>
-                      )}
                     </div>
                   </td>
                 </tr>

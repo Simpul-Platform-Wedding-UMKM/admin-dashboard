@@ -35,17 +35,17 @@ export enum BookingStatus {
   COMPLETED = 'COMPLETED',
 }
 
-export enum PaymentSplitStatus {
+export enum PaymentStatus {
   PENDING = 'PENDING',
-  HOLDING = 'HOLDING',
-  RELEASED = 'RELEASED',
+  PAID = 'PAID',
+  EXPIRED = 'EXPIRED',
   FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
 }
 
 export enum SettlementStatus {
   PENDING = 'PENDING',
-  IN_PROGRESS = 'IN_PROGRESS',
-  COMPLETED = 'COMPLETED',
+  SETTLED = 'SETTLED',
   FAILED = 'FAILED',
 }
 
@@ -171,7 +171,8 @@ export interface PaymentSplit {
   microFeeAmount: number;
   platformFeeAmount: number;
   netAmount: number;
-  status: PaymentSplitStatus;
+  vendorAmount?: number;
+  status: PaymentStatus;
   settlementStatus: SettlementStatus;
   qrisCode?: string;
   qrisExpiresAt?: string;
@@ -181,6 +182,17 @@ export interface PaymentSplit {
   releasedAt?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+// Field tambahan hasil enrich backend (nama item/vendor, geolokasi check-in).
+export interface ExtendedPaymentSplit extends PaymentSplit {
+  checkoutLatitude?: number;
+  checkoutLongitude?: number;
+  eventLatitude?: number;
+  eventLongitude?: number;
+  vendorName?: string;
+  serviceName?: string;
+  bookingTitle?: string;
 }
 
 export interface Dispute {
@@ -335,4 +347,13 @@ export interface VendorMetrics {
   completionRate: number;
   holdingFunds: number;
   totalBookings: number;
+}
+
+export interface HeatmapPoint {
+  id: string;
+  kecamatan: string;
+  latitude: number;
+  longitude: number;
+  amount: number;
+  count: number;
 }

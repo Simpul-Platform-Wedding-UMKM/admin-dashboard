@@ -18,7 +18,7 @@ import {
   DollarSign
 } from 'lucide-react'
 import { formatNumber } from '@/lib/utils-simpul'
-import type { HeatmapPoint } from '@/lib/dummyData'
+import type { HeatmapPoint } from '@/lib/types'
 
 // List of all 27 sub-districts for the dropdown filter option
 const KECAMATAN_LIST = [

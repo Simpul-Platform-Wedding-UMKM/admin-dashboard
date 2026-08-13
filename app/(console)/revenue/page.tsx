@@ -92,7 +92,7 @@ export default function RevenueFinancialPage() {
   const totalGMV = splits.reduce((sum, s) => sum + s.grossAmount, 0)
   const totalMicroFees = splits.reduce((sum, s) => sum + s.microFeeAmount, 0)
   const totalPlatformFees = splits.reduce((sum, s) => sum + s.platformFeeAmount, 0)
-  const totalSettled = splits.filter(s => s.settlementStatus === 'COMPLETED').reduce((sum, s) => sum + s.netAmount, 0)
+  const totalSettled = splits.filter(s => s.settlementStatus === 'SETTLED').reduce((sum, s) => sum + s.netAmount, 0)
 
   return (
     <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
@@ -117,7 +117,7 @@ export default function RevenueFinancialPage() {
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Settled</p>
-          <p className="text-headline-lg text-tertiary-container font-semibold">Rp {(totalSettled / 1e9).toFixed(1)}B</p>
+          <p className="text-headline-lg text-primary font-semibold">Rp {(totalSettled / 1e9).toFixed(1)}B</p>
         </Card>
       </div>
 
@@ -155,19 +155,19 @@ export default function RevenueFinancialPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
           <div className="p-md bg-surface-container rounded-md">
             <p className="text-label-sm text-on-surface-variant mb-sm">Pending</p>
-            <p className="text-headline-lg text-tertiary font-semibold">{splits.filter(s => s.settlementStatus === 'PENDING').length}</p>
+            <p className="text-headline-lg text-on-surface font-semibold">{splits.filter(s => s.settlementStatus === 'PENDING').length}</p>
           </div>
           <div className="p-md bg-surface-container rounded-md">
-            <p className="text-label-sm text-on-surface-variant mb-sm">In Progress</p>
-            <p className="text-headline-lg text-tertiary font-semibold">{splits.filter(s => s.settlementStatus === 'IN_PROGRESS').length}</p>
-          </div>
-          <div className="p-md bg-surface-container rounded-md">
-            <p className="text-label-sm text-on-surface-variant mb-sm">Completed</p>
-            <p className="text-headline-lg text-tertiary-container font-semibold">{splits.filter(s => s.settlementStatus === 'COMPLETED').length}</p>
+            <p className="text-label-sm text-on-surface-variant mb-sm">Settled</p>
+            <p className="text-headline-lg text-primary font-semibold">{splits.filter(s => s.settlementStatus === 'SETTLED').length}</p>
           </div>
           <div className="p-md bg-surface-container rounded-md">
             <p className="text-label-sm text-on-surface-variant mb-sm">Failed</p>
             <p className="text-headline-lg text-error font-semibold">{splits.filter(s => s.settlementStatus === 'FAILED').length}</p>
+          </div>
+          <div className="p-md bg-surface-container rounded-md">
+            <p className="text-label-sm text-on-surface-variant mb-sm">Total Split</p>
+            <p className="text-headline-lg text-on-surface font-semibold">{splits.length}</p>
           </div>
         </div>
       </Card>

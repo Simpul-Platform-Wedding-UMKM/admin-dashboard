@@ -89,9 +89,9 @@ export function getStatusColor(status: string): string {
     'IN_REVIEW': 'bg-tertiary text-on-tertiary',
     'RESOLVED': 'bg-tertiary-container text-on-tertiary-container',
     'CLOSED': 'bg-surface-container text-on-surface',
-    // Payment split statuses
-    'HOLDING': 'bg-tertiary text-on-tertiary',
-    'RELEASED': 'bg-tertiary-container text-on-tertiary-container',
+    // Payment statuses
+    'PAID': 'bg-primary-container text-on-primary-container',
+    'EXPIRED': 'bg-surface-container text-on-surface-variant',
     'FAILED': 'bg-error text-on-error',
     // Old Indonesian labels for backwards compatibility
     'aktif': 'bg-tertiary text-on-tertiary',

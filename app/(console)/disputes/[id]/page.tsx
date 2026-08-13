@@ -36,7 +36,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { formatCurrency, formatDate } from '@/lib/utils-simpul'
 import type { Dispute } from '@/lib/types'
-import type { ExtendedPaymentSplit } from '@/lib/dummyData'
+import type { ExtendedPaymentSplit } from '@/lib/types'
 
 type ResolutionOption = 'REFUND_100' | 'RELEASE_30' | 'CUSTOM'
 
@@ -157,11 +157,9 @@ export default function DisputeMediationPage() {
       // Update payment split details in simulated storage
       if (split) {
         await updatePaymentSplit(split.id, {
-          platformFeeAmount: platformFee,
-          microFeeAmount: microFee,
-          netAmount: vendorNet,
-          status: (buyerPercent === 100 ? 'FAILED' : 'RELEASED') as any, // FAILED means refunded to buyer, RELEASED means payout to vendor
-          settlementStatus: (buyerPercent === 100 ? 'FAILED' : 'COMPLETED') as any
+          platformFeeAmount: Math.round(platformFee),
+          vendorAmount: Math.round(vendorNet),
+          settlementStatus: (buyerPercent === 100 ? 'FAILED' : 'SETTLED') as any
         })
       }
 

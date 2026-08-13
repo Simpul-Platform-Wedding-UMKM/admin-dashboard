@@ -20,7 +20,7 @@ import {
   Loader2
 } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils-simpul'
-import type { ExtendedPaymentSplit } from '@/lib/dummyData'
+import type { ExtendedPaymentSplit } from '@/lib/types'
 
 export default function RevenueAuditPage() {
   const { toast } = useToast()
@@ -58,9 +58,7 @@ export default function RevenueAuditPage() {
     try {
       // Update local storage split payment state
       await updatePaymentSplit(splitId, {
-        status: 'RELEASED' as any,
-        settlementStatus: 'COMPLETED' as any,
-        releasedAt: new Date().toISOString()
+        settlementStatus: 'SETTLED' as any,
       })
 
       // Refresh data
@@ -84,10 +82,9 @@ export default function RevenueAuditPage() {
 
   const getStatusBadge = (status: string) => {
     const badges: Record<string, React.ReactNode> = {
-      'COMPLETED': <Badge className="bg-tertiary-container text-on-tertiary-container font-semibold">SETTLED</Badge>,
-      'PENDING': <Badge className="bg-tertiary text-on-tertiary font-semibold animate-pulse">PENDING</Badge>,
+      'SETTLED': <Badge className="bg-primary-container text-on-primary-container font-semibold">SETTLED</Badge>,
+      'PENDING': <Badge className="bg-surface-container-high text-on-surface-variant font-semibold">PENDING</Badge>,
       'FAILED': <Badge className="bg-error text-on-error font-semibold">FAILED</Badge>,
-      'IN_PROGRESS': <Badge className="bg-tertiary text-on-tertiary font-semibold">IN PROGRESS</Badge>
     }
     return badges[status] || <Badge className="bg-surface-container text-on-surface">{status}</Badge>
   }
@@ -114,7 +111,7 @@ export default function RevenueAuditPage() {
   }
 
   // Aggregate stats
-  const settledSplits = splits.filter(s => s.settlementStatus === 'COMPLETED')
+  const settledSplits = splits.filter(s => s.settlementStatus === 'SETTLED')
   const pendingSplits = splits.filter(s => s.settlementStatus === 'PENDING')
   const failedSplits = splits.filter(s => s.settlementStatus === 'FAILED')
 
@@ -141,13 +138,13 @@ export default function RevenueAuditPage() {
 
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Settled Payouts</p>
-          <p className="text-headline-md text-tertiary font-bold">{formatCurrency(totalSettled)}</p>
+          <p className="text-headline-md text-primary font-bold">{formatCurrency(totalSettled)}</p>
           <p className="text-label-sm text-on-surface-variant mt-xs">{settledSplits.length} transfer berhasil</p>
         </Card>
 
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Pendapatan Platform Fee (1%)</p>
-          <p className="text-headline-md text-primary font-bold">{formatCurrency(totalPlatformFee)}</p>
+          <p className="text-headline-md text-tertiary font-bold">{formatCurrency(totalPlatformFee)}</p>
           <p className="text-label-sm text-on-surface-variant mt-xs">Komisi bersih SIMPUL</p>
         </Card>
 
@@ -163,8 +160,8 @@ export default function RevenueAuditPage() {
         <div className="flex justify-between items-center mb-md pb-xs border-b border-outline-variant">
           <h2 className="text-headline-md text-on-surface font-semibold">Ledger Settlement Transaksi</h2>
           <div className="flex flex-wrap gap-xs">
-            <Badge className="bg-tertiary-container text-on-tertiary-container font-medium">{settledSplits.length} Settled</Badge>
-            {pendingSplits.length > 0 && <Badge className="bg-tertiary text-on-tertiary font-medium">{pendingSplits.length} Pending</Badge>}
+            <Badge className="bg-primary-container text-on-primary-container font-medium">{settledSplits.length} Settled</Badge>
+            {pendingSplits.length > 0 && <Badge className="bg-surface-container-high text-on-surface-variant font-medium">{pendingSplits.length} Pending</Badge>}
             {failedSplits.length > 0 && <Badge className="bg-error text-on-error font-medium">{failedSplits.length} Failed</Badge>}
           </div>
         </div>
@@ -210,7 +207,7 @@ export default function RevenueAuditPage() {
                     <td className="px-3 py-2 text-right text-body-sm text-on-surface-variant hidden lg:table-cell whitespace-nowrap">{formatCurrency(item.microFeeAmount)}</td>
                     
                     {/* Net payout vendor */}
-                    <td className="px-3 py-2 text-right text-body-sm text-tertiary font-bold whitespace-nowrap">{formatCurrency(item.netAmount)}</td>
+                    <td className="px-3 py-2 text-right text-body-sm text-on-surface font-bold whitespace-nowrap">{formatCurrency(item.netAmount)}</td>
                     
                     {/* Status */}
                     <td className="px-3 py-2 text-center">{getStatusBadge(item.settlementStatus)}</td>
@@ -237,7 +234,7 @@ export default function RevenueAuditPage() {
                         </Button>
                       ) : (
                         <span className="text-label-sm text-on-surface-variant flex items-center justify-center gap-xs">
-                          <CheckCircle className="h-4 w-4 text-tertiary-container" /> Settled Manual
+                          <CheckCircle className="h-4 w-4 text-primary" /> Settled Manual
                         </span>
                       )}
                     </td>
