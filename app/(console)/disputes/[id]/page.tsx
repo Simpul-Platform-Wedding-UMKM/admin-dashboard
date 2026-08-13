@@ -151,12 +151,12 @@ export default function DisputeMediationPage() {
         resolutionType = 'SELLER_WIN'
       }
 
-      // Update dispute status
+      // Update dispute status. Hanya kirim field yang pasti didukung oleh
+      // schema PATCH backend. `resolvedAt` di-set server-side, dan `resolutionType`
+      // (jika tidak dikenali) dipindah ke dalam catatan agar info tidak hilang.
       const updatedDispute = await updateDispute(id, {
         status: 'RESOLVED' as any,
-        resolutionType: resolutionType as any,
-        resolutionNotes: `Resolusi: Refund Pengantin ${buyerPercent}%, Payout Vendor ${100 - buyerPercent}%. Catatan Admin: "${resolutionReason}"`,
-        resolvedAt: new Date().toISOString()
+        resolutionNotes: `Resolusi (${resolutionType}): Refund Pengantin ${buyerPercent}%, Payout Vendor ${100 - buyerPercent}%. Catatan Admin: "${resolutionReason}"`,
       } as any)
       
       // Update payment split details in simulated storage
