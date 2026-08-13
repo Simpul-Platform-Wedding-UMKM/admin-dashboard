@@ -1,13 +1,13 @@
 import { apiFetch } from '@/lib/api'
 import type { Vendor } from '@/lib/types'
 
-// Shape dari GET /admin/dashboard — endpoint admin dengan mapping lengkap.
+// Shape dari GET /dashboard — endpoint admin di-mount di root backend.
 interface AdminDashboardResponse {
   vendors: Vendor[]
 }
 
 export async function getVendors(): Promise<Vendor[]> {
-  const data = await apiFetch<AdminDashboardResponse>('/admin/dashboard')
+  const data = await apiFetch<AdminDashboardResponse>('/dashboard')
   return data.vendors
 }
 

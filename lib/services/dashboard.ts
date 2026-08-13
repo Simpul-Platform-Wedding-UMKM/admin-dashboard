@@ -1,7 +1,8 @@
 import { apiFetch } from '@/lib/api'
 import type { Vendor, Dispute, HeatmapPoint } from '@/lib/types'
 
-// Shape response GET /admin/dashboard — satu endpoint untuk seluruh ringkasan.
+// Shape response GET /dashboard — satu endpoint untuk seluruh ringkasan.
+// (adminRouter di backend di-mount di root, bukan prefix /admin)
 export interface DashboardSummary {
   vendors: Vendor[]
   paymentSplits: number
@@ -16,5 +17,5 @@ export interface DashboardSummary {
 }
 
 export async function getDashboardSummary(): Promise<DashboardSummary> {
-  return apiFetch<DashboardSummary>('/admin/dashboard')
+  return apiFetch<DashboardSummary>('/dashboard')
 }
