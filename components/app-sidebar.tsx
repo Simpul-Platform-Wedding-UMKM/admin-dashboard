@@ -11,7 +11,6 @@ import {
   IconBrain,
   IconStar,
   IconUsers,
-  IconSettings,
   IconMap,
   IconUserCheck,
 } from "@tabler/icons-react"
@@ -83,11 +82,6 @@ const data = {
       title: "Manajemen Pengguna & Peran",
       url: "/user-management",
       icon: IconUsers,
-    },
-    {
-      title: "Pengaturan",
-      url: "/settings",
-      icon: IconSettings,
     },
   ],
 }
