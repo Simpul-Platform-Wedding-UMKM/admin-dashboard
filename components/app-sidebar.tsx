@@ -7,9 +7,6 @@ import {
   IconCreditCard,
   IconAlertCircle,
   IconTrendingUp,
-  IconShield,
-  IconBrain,
-  IconStar,
   IconUsers,
   IconMap,
   IconUserCheck,
@@ -62,21 +59,6 @@ const data = {
       title: "Audit Pendapatan",
       url: "/revenue/audit",
       icon: IconTrendingUp,
-    },
-    {
-      title: "Risiko & Kepatuhan",
-      url: "/compliance",
-      icon: IconShield,
-    },
-    {
-      title: "Analisis AI",
-      url: "/ai-analytics",
-      icon: IconBrain,
-    },
-    {
-      title: "Pemasaran & Unggulan",
-      url: "/marketing",
-      icon: IconStar,
     },
     {
       title: "Manajemen Pengguna & Peran",

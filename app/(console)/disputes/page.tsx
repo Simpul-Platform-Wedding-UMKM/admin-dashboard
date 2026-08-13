@@ -28,12 +28,12 @@ export default function DisputeResolutionPage() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      'OPEN': 'bg-error text-on-error',
-      'IN_REVIEW': 'bg-tertiary text-on-tertiary',
-      'RESOLVED': 'bg-tertiary-container text-on-tertiary-container',
-      'CLOSED': 'bg-surface-container text-on-surface',
+      'OPEN': 'bg-destructive text-destructive-foreground',
+      'IN_REVIEW': 'bg-secondary text-secondary-foreground',
+      'RESOLVED': 'bg-tertiary-container text-tertiary-on-container',
+      'CLOSED': 'bg-surface-container-high text-on-surface',
     }
-    return colors[status] || 'bg-surface-container text-on-surface'
+    return colors[status] || 'bg-surface-container-high text-on-surface'
   }
 
   if (loading) {
@@ -43,7 +43,7 @@ export default function DisputeResolutionPage() {
           <h1 className="font-heading text-headline-lg text-on-surface">Dispute Resolution</h1>
           <p className="text-body-md text-on-surface-variant">Manage and resolve customer disputes with vendors</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i} className="p-md bg-surface-container-lowest border border-outline-variant">
               <Skeleton className="h-4 w-24 mb-xs" />
@@ -51,7 +51,7 @@ export default function DisputeResolutionPage() {
             </Card>
           ))}
         </div>
-        <div className="hidden md:grid grid-cols-4 gap-md">
+        <div className="hidden lg:grid lg:grid-cols-4 gap-md">
           {Array.from({ length: 4 }).map((_, i) => (
             <Card key={i} className="p-md bg-surface-container-lowest border border-outline-variant">
               <Skeleton className="h-6 w-32 mb-md" />
@@ -96,7 +96,7 @@ export default function DisputeResolutionPage() {
           <p className="text-body-md text-on-surface-variant">Manage and resolve customer disputes with vendors</p>
         </div>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant flex flex-col items-center justify-center py-xl gap-md">
-          <AlertCircle className="h-12 w-12 text-error" />
+          <AlertCircle className="h-12 w-12 text-destructive" />
           <p className="text-body-md text-on-surface font-semibold">Gagal memuat data dispute</p>
           <p className="text-body-sm text-on-surface-variant text-center max-w-md">{error}</p>
           <Button variant="outline" onClick={() => { setLoading(true); setError(null); getDisputes().then(setDisputes).catch((e) => setError(e.message)).finally(() => setLoading(false)) }}>
@@ -115,27 +115,27 @@ export default function DisputeResolutionPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Total Disputes</p>
           <p className="text-headline-lg text-on-surface font-semibold">{disputes.length}</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Open</p>
-          <p className="text-headline-lg text-error font-semibold">{disputes.filter(d => d.status === 'OPEN').length}</p>
+          <p className="text-headline-lg text-destructive font-semibold">{disputes.filter(d => d.status === 'OPEN').length}</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">In Review</p>
-          <p className="text-headline-lg text-tertiary font-semibold">{disputes.filter(d => d.status === 'IN_REVIEW').length}</p>
+          <p className="text-headline-lg text-secondary font-semibold">{disputes.filter(d => d.status === 'IN_REVIEW').length}</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Resolved</p>
-          <p className="text-headline-lg text-tertiary-container font-semibold">{disputes.filter(d => d.status === 'RESOLVED').length}</p>
+          <p className="text-headline-lg text-primary font-semibold">{disputes.filter(d => d.status === 'RESOLVED').length}</p>
         </Card>
       </div>
 
       {/* Kanban Board — desktop/tablet: side-by-side columns */}
-      <div className="hidden md:grid grid-cols-4 gap-md">
+      <div className="hidden lg:grid lg:grid-cols-4 gap-md">
         {DISPUTE_STATUSES.map((status) => (
           <Card key={status} className="p-md bg-surface-container-lowest border border-outline-variant">
             <h3 className="text-headline-sm text-on-surface font-semibold mb-md">{status.replace(/_/g, ' ')}</h3>
@@ -145,7 +145,7 @@ export default function DisputeResolutionPage() {
                   <Card className="p-md bg-surface-container border-l-4 border-l-primary hover:shadow-elevated transition-shadow cursor-pointer">
                     <p className="text-label-md text-on-surface font-semibold mb-xs">ID: {dispute.id}</p>
                     <p className="text-body-sm text-on-surface-variant mb-sm">{dispute.reason}</p>
-                    <Badge className="bg-primary text-on-primary">{dispute.status}</Badge>
+                    <Badge className="bg-primary text-primary-foreground">{dispute.status}</Badge>
                   </Card>
                 </Link>
               ))}
@@ -155,7 +155,7 @@ export default function DisputeResolutionPage() {
       </div>
 
       {/* Kanban Board — mobile: tab switcher between statuses, no horizontal scroll */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Tabs value={activeStatus} onValueChange={setActiveStatus}>
           <TabsList className="w-full overflow-x-auto justify-start">
             {DISPUTE_STATUSES.map((status) => (
@@ -171,7 +171,7 @@ export default function DisputeResolutionPage() {
               <Card className="p-md bg-surface-container-lowest border-l-4 border-l-primary hover:shadow-elevated cursor-pointer transition-shadow">
                 <p className="text-label-md text-on-surface font-semibold mb-xs">ID: {dispute.id}</p>
                 <p className="text-body-sm text-on-surface-variant mb-sm">{dispute.reason}</p>
-                <Badge className="bg-primary text-on-primary">{dispute.status}</Badge>
+                <Badge className="bg-primary text-primary-foreground">{dispute.status}</Badge>
               </Card>
             </Link>
           ))}

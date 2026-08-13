@@ -202,7 +202,7 @@ export default function DisputeMediationPage() {
   if (error || !dispute) {
     return (
       <main className="flex flex-1 flex-col items-center justify-center p-md py-20 gap-md">
-        <AlertCircle className="h-12 w-12 text-error" />
+        <AlertCircle className="h-12 w-12 text-destructive" />
         <h2 className="text-headline-md text-on-surface font-semibold">Dispute Tidak Ditemukan</h2>
         <p className="text-body-md text-on-surface-variant">{error || 'Data dispute dengan ID tersebut tidak tersedia.'}</p>
         <Link href="/disputes">
@@ -238,10 +238,10 @@ export default function DisputeMediationPage() {
             <h1 className="font-heading text-headline-lg text-on-surface font-bold">Mediasi ID: {dispute.id}</h1>
             <Badge className={
               dispute.status === 'RESOLVED' 
-                ? 'bg-tertiary-container text-on-tertiary-container' 
+                ? 'bg-tertiary-container text-tertiary-on-container' 
                 : dispute.status === 'OPEN' 
-                  ? 'bg-error text-on-error' 
-                  : 'bg-tertiary text-on-tertiary'
+                  ? 'bg-destructive text-destructive-foreground' 
+                  : 'bg-secondary text-secondary-foreground'
             }>
               {dispute.status}
             </Badge>
@@ -253,19 +253,19 @@ export default function DisputeMediationPage() {
         <div className="flex gap-sm w-full md:w-auto">
           {dispute.status === 'OPEN' && (
             <Button 
-              variant="outline" 
+              variant="secondary" 
               onClick={handleSetInReview}
               disabled={actionLoading}
               className="flex-1 md:flex-initial"
             >
-              Mulai Peninjauan (In Review)
+              Mulai Review
             </Button>
           )}
           {(dispute.status === 'OPEN' || dispute.status === 'IN_REVIEW') && (
             <Button 
               onClick={() => setIsResolveOpen(true)}
               disabled={actionLoading}
-              className="flex-1 md:flex-initial bg-tertiary text-on-tertiary hover:bg-tertiary/90"
+              className="flex-1 md:flex-initial"
             >
               <Scale className="mr-xs h-4 w-4" /> Selesaikan Sengketa
             </Button>
@@ -275,10 +275,10 @@ export default function DisputeMediationPage() {
 
       {/* Resolved info alert */}
       {dispute.status === 'RESOLVED' && (
-        <Card className="p-md bg-tertiary-container border border-tertiary/20 flex gap-sm items-start">
-          <CheckCircle className="h-5 w-5 text-tertiary mt-0.5" />
+        <Card className="p-md bg-tertiary-container border border-outline-variant flex gap-sm items-start">
+          <CheckCircle className="h-5 w-5 text-tertiary-on-container mt-0.5" />
           <div>
-            <h4 className="text-body-md font-semibold text-tertiary-container">Sengketa Selesai Dimediasi</h4>
+            <h4 className="text-body-md font-semibold text-tertiary-on-container">Sengketa Selesai Dimediasi</h4>
             <p className="text-label-md text-on-surface-variant mt-xs">
               Keputusan Mediasi: <span className="font-semibold text-on-surface">{dispute.resolutionNotes}</span>
             </p>
@@ -298,7 +298,7 @@ export default function DisputeMediationPage() {
           {/* Dispute Parties Card */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
             <h3 className="text-headline-md text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-xs">
-              <User className="h-5 w-5 text-tertiary" /> Pihak Bersengketa
+              <User className="h-5 w-5 text-primary" /> Pihak Bersengketa
             </h3>
 
             <div className="space-y-sm">
@@ -321,7 +321,7 @@ export default function DisputeMediationPage() {
           {/* Contract Split Info Card */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
             <h3 className="text-headline-md text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-xs">
-              <Scale className="h-5 w-5 text-tertiary" /> Nilai Kontrak Bersengketa
+              <Scale className="h-5 w-5 text-primary" /> Nilai Kontrak Bersengketa
             </h3>
 
             {split ? (
@@ -334,11 +334,11 @@ export default function DisputeMediationPage() {
                 <div className="pt-xs border-t border-outline-variant space-y-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-body-md text-on-surface">Total Nilai Kontrak</span>
-                    <span className="text-body-md font-bold text-error">{formatCurrency(split.grossAmount)}</span>
+                    <span className="text-body-md font-bold text-destructive">{formatCurrency(split.grossAmount)}</span>
                   </div>
                   <div className="flex justify-between items-center text-label-md text-on-surface-variant">
                     <span>Dana Ditahan (Holding Status)</span>
-                    <Badge className="bg-tertiary text-on-tertiary">HOLDING</Badge>
+                    <Badge className="bg-surface-container-high text-on-surface-variant">HOLDING</Badge>
                   </div>
                 </div>
               </div>
@@ -354,16 +354,16 @@ export default function DisputeMediationPage() {
           {/* Dispute Description */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
             <h3 className="text-headline-md text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-xs">
-              <FileText className="h-5 w-5 text-tertiary" /> Kronologi & Alasan Sengketa
+              <FileText className="h-5 w-5 text-primary" /> Kronologi & Alasan Sengketa
             </h3>
 
             <div className="space-y-sm text-body-md leading-relaxed text-on-surface">
-              <p className="p-sm bg-surface-container rounded-md border border-outline-variant font-medium text-error flex items-start gap-xs">
-                <AlertCircle className="h-5 w-5 text-error mt-0.5 shrink-0" />
+              <p className="p-sm bg-surface-container rounded-md border border-outline-variant font-medium text-destructive flex items-start gap-xs">
+                <AlertCircle className="h-5 w-5 text-destructive mt-0.5 shrink-0" />
                 <span>Kategori Pelanggaran: {dispute.reason}</span>
               </p>
               
-              <p className="text-on-surface leading-relaxed whitespace-pre-line p-sm bg-surface-container/50 border border-outline-variant/60 rounded-md">
+              <p className="text-on-surface leading-relaxed whitespace-pre-line p-sm bg-surface-container/50 border border-outline-variant rounded-md">
                 {dispute.description}
               </p>
             </div>
@@ -372,7 +372,7 @@ export default function DisputeMediationPage() {
           {/* Evidence Card */}
           <Card className="p-md bg-surface-container-lowest border border-outline-variant">
             <h3 className="text-headline-md text-on-surface font-semibold mb-md pb-xs border-b border-outline-variant flex items-center gap-xs">
-              <FileText className="h-5 w-5 text-tertiary" /> Lampiran Bukti Sengketa (Screenshots/Foto)
+              <FileText className="h-5 w-5 text-primary" /> Lampiran Bukti Sengketa (Screenshots/Foto)
             </h3>
 
             {dispute.evidence && dispute.evidence.length > 0 ? (
@@ -398,7 +398,7 @@ export default function DisputeMediationPage() {
                     <div className="p-sm flex justify-end text-label-sm text-on-surface-variant">
                       <button 
                         onClick={() => setZoomImg(imgUrl)}
-                        className="text-tertiary font-semibold hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer py-1"
+                        className="text-primary font-semibold hover:underline flex items-center gap-1.5 bg-transparent border-none cursor-pointer py-1"
                       >
                         Pratinjau <ExternalLink className="h-4 w-4" />
                       </button>
@@ -417,7 +417,7 @@ export default function DisputeMediationPage() {
       <Dialog open={isResolveOpen} onOpenChange={setIsResolveOpen}>
         <DialogContent className="sm:max-w-lg bg-surface-container-lowest border border-outline-variant">
           <DialogHeader>
-            <DialogTitle className="text-headline-md text-tertiary flex items-center gap-xs">
+            <DialogTitle className="text-headline-md text-on-surface flex items-center gap-xs">
               <Scale className="h-5 w-5" /> Formulir Penyelesaian Sengketa
             </DialogTitle>
             <DialogDescription className="text-body-md text-on-surface-variant">
@@ -489,7 +489,7 @@ export default function DisputeMediationPage() {
             )}
 
             {/* CRITICAL UI: Real-time Rupiah calculation box */}
-            <div className="p-sm bg-surface-variant rounded-md border border-outline/20 space-y-xs">
+            <div className="p-sm bg-surface-variant rounded-md border border-outline-variant space-y-xs">
               <span className="text-label-sm uppercase tracking-wider text-on-surface-variant font-bold">Kalkulasi Pembagian Payout Dana</span>
               
               <div className="pt-xs border-t border-outline-variant space-y-sm text-label-md">
@@ -503,7 +503,7 @@ export default function DisputeMediationPage() {
                   <span>{formatCurrency(buyerRefund)}</span>
                 </div>
 
-                <div className="flex justify-between text-tertiary">
+                <div className="flex justify-between text-on-surface">
                   <span>Payout Vendor Gross ({100 - buyerPercent}%):</span>
                   <span>{formatCurrency(vendorGross)}</span>
                 </div>
@@ -536,7 +536,7 @@ export default function DisputeMediationPage() {
                 value={resolutionReason}
                 onChange={(e) => setResolutionReason(e.target.value)}
                 rows={3}
-                className="bg-surface-container border border-outline-variant text-on-surface resize-none focus-visible:ring-tertiary"
+                className="bg-surface-container border border-outline-variant text-on-surface resize-none focus-visible:ring-primary"
               />
             </div>
           </div>
@@ -558,7 +558,7 @@ export default function DisputeMediationPage() {
               type="button"
               onClick={handleResolve}
               disabled={actionLoading || !resolutionReason.trim()}
-              className="flex-1 sm:flex-initial bg-tertiary text-on-tertiary hover:bg-tertiary/95"
+              className="flex-1 sm:flex-initial"
             >
               {actionLoading ? 'Memproses...' : 'Terapkan Resolusi'}
             </Button>
