@@ -168,7 +168,7 @@ export default function MarketingFeaturedPage() {
               </Card>
             ))
           ) : (
-            vendors.filter(v => v.status === 'ACTIVE' && !featuredSlots.find(s => s.vendorId === v.id)).slice(0, 6).map((vendor) => (
+            vendors.filter(v => v.status === 'VERIFIED' && !featuredSlots.find(s => s.vendorId === v.id)).slice(0, 6).map((vendor) => (
               <Card key={vendor.id} className="p-md bg-surface-container border border-outline-variant hover:shadow-elevated transition-shadow flex flex-col justify-between gap-md">
                 <div>
                   <div className="mb-sm">

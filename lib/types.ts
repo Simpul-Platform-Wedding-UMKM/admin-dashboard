@@ -12,6 +12,8 @@ export enum VendorStatus {
   SUSPENDED = 'SUSPENDED',
   PENDING = 'PENDING',
   REJECTED = 'REJECTED',
+  UNSUBMITTED = 'UNSUBMITTED',
+  VERIFIED = 'VERIFIED',
 }
 
 export enum DisputeStatus {

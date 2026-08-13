@@ -26,10 +26,11 @@ export default function VendorManagementPage() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      'ACTIVE': 'bg-tertiary text-on-tertiary',
+      'VERIFIED': 'bg-tertiary text-on-tertiary',
       'SUSPENDED': 'bg-error text-on-error',
       'PENDING': 'bg-tertiary-container text-on-tertiary-container',
       'REJECTED': 'bg-error-container text-on-error-container',
+      'UNSUBMITTED': 'bg-surface-container text-on-surface-variant',
     }
     return colors[status] || 'bg-surface-container text-on-surface'
   }
@@ -114,8 +115,8 @@ export default function VendorManagementPage() {
           <p className="text-headline-lg text-on-surface font-semibold">{vendors.length}</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
-          <p className="text-label-sm text-on-surface-variant mb-xs">Active</p>
-          <p className="text-headline-lg text-tertiary font-semibold">{vendors.filter(v => v.status === 'ACTIVE').length}</p>
+          <p className="text-label-sm text-on-surface-variant mb-xs">Terverifikasi</p>
+          <p className="text-headline-lg text-tertiary font-semibold">{vendors.filter(v => v.status === 'VERIFIED').length}</p>
         </Card>
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
           <p className="text-label-sm text-on-surface-variant mb-xs">Pending</p>

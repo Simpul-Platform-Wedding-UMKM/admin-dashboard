@@ -1,61 +1,30 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getVendors } from '@/lib/services/vendor'
-import { getPaymentSplits } from '@/lib/services/payment'
-import { getDisputes } from '@/lib/services/dispute'
-import { getAuditLogs } from '@/lib/services/admin'
-import type { Vendor, PaymentSplit, Dispute, AuditLog } from '@/lib/types'
+import { getDashboardSummary, type DashboardSummary } from '@/lib/services/dashboard'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AlertCircle, TrendingUp, Building2, CreditCard, ShieldAlert, Award } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { DashboardHeatmapCard } from '@/components/dashboard/dashboard-heatmap-card'
 
 export default function OverviewPage() {
-  const [vendors, setVendors] = useState<Vendor[]>([])
-  const [paymentSplits, setPaymentSplits] = useState<PaymentSplit[]>([])
-  const [disputes, setDisputes] = useState<Dispute[]>([])
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
+  const [data, setData] = useState<DashboardSummary | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    Promise.all([
-      getVendors(),
-      getPaymentSplits(),
-      getDisputes(),
-      getAuditLogs(),
-    ])
-      .then(([v, p, d, a]) => {
-        setVendors(v)
-        setPaymentSplits(p)
-        setDisputes(d)
-        setAuditLogs(a)
-      })
+  const fetchData = () => {
+    setLoading(true)
+    setError(null)
+    getDashboardSummary()
+      .then(setData)
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [])
-
-  const getActionLabel = (action: string) => {
-    const labels: Record<string, string> = {
-      'APPROVE': 'Verifikasi Disetujui',
-      'REJECT': 'Verifikasi Ditolak',
-      'UPDATE': 'Pembaruan Data',
-      'DELETE': 'Penghapusan Data',
-      'CREATE': 'Pembuatan Baru',
-      'SUSPEND': 'Akses Ditangguhkan'
-    }
-    return labels[action] || action
-  }
-
-  const getEntityLabel = (entity: string) => {
-    const labels: Record<string, string> = {
-      'VENDOR': 'Vendor',
-      'DISPUTE': 'Sengketa',
-      'TRANSACTION': 'Transaksi'
-    }
-    return labels[entity] || entity
-  }
 
   if (loading) {
     return (
@@ -97,7 +66,7 @@ export default function OverviewPage() {
     )
   }
 
-  if (error) {
+  if (error || !data) {
     return (
       <main className="flex flex-1 flex-col gap-lg p-md md:p-xl">
         <Card className="p-md bg-surface-container-lowest border border-outline-variant">
@@ -105,12 +74,8 @@ export default function OverviewPage() {
             <AlertCircle className="w-6 h-6 text-error mt-0.5" />
             <div className="flex-1">
               <h2 className="text-headline-md text-on-surface font-semibold mb-sm">Gagal Memuat Data</h2>
-              <p className="text-body-md text-on-surface-variant mb-md">{error}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => window.location.reload()}
-              >
+              <p className="text-body-md text-on-surface-variant mb-md">{error ?? 'Data dashboard tidak tersedia'}</p>
+              <Button variant="outline" size="sm" onClick={fetchData}>
                 Coba lagi
               </Button>
             </div>
@@ -120,18 +85,24 @@ export default function OverviewPage() {
     )
   }
 
-  // Calculate KPIs from API data
-  const activeVendors = vendors.filter(v => v.status === 'ACTIVE').length
-  const totalGMV = vendors.reduce((sum, v) => sum + v.totalRevenue, 0)
-  const totalTransactions = paymentSplits.length
-  const totalDisputes = disputes.length
-  const holdingFunds = vendors.reduce((sum, v) => sum + v.holdingFunds, 0)
+  const { vendors, disputes, heatmap, kpis } = data
 
-  const kpis = [
-    { label: 'Total GMV (Peredaran Bruto)', value: `Rp ${(totalGMV / 1e6).toLocaleString('id-ID')} Jt`, change: '+12.5%', color: 'text-primary', icon: TrendingUp },
-    { label: 'Vendor Aktif Terverifikasi', value: activeVendors.toString(), change: '+3 vendor baru', color: 'text-tertiary', icon: Building2 },
-    { label: 'Total Transaksi Masuk', value: totalTransactions.toString(), change: '+8 transaksi baru', color: 'text-primary', icon: CreditCard },
-    { label: 'Kasus Sengketa Aktif', value: totalDisputes.toString(), change: '1 menunggu respon', color: 'text-error', icon: ShieldAlert },
+  // ── KPI dari endpoint ringkasan (angka real dari DB) ──
+  const totalGMV = kpis.totalGMV
+  const activeVendors = kpis.activeVendors
+  const totalTransactions = kpis.totalTransactions
+  const totalDisputes = kpis.openDisputes
+  const holdingFunds = vendors.reduce((sum, v) => sum + v.holdingFunds, 0)
+  const suspendedVendors = vendors.filter(v => v.status === 'SUSPENDED').length
+  const pendingKyb = vendors.filter(v => v.status === 'PENDING').length
+  const rejectedKyb = vendors.filter(v => v.status === 'REJECTED').length
+  const unsubmittedKyb = vendors.filter(v => v.status === 'UNSUBMITTED').length
+
+  const kpiCards = [
+    { label: 'Total GMV (Peredaran Bruto)', value: `Rp ${(totalGMV / 1e6).toLocaleString('id-ID', { maximumFractionDigits: 0 })} Jt`, change: 'Dari pembayaran lunas', color: 'text-primary', icon: TrendingUp },
+    { label: 'Vendor Aktif Terverifikasi', value: activeVendors.toString(), change: `Dari ${vendors.length} vendor terdaftar`, color: 'text-tertiary', icon: Building2 },
+    { label: 'Total Transaksi Masuk', value: totalTransactions.toString(), change: 'Semua payment split', color: 'text-primary', icon: CreditCard },
+    { label: 'Kasus Sengketa Aktif', value: totalDisputes.toString(), change: `${disputes.length} total sengketa`, color: 'text-error', icon: ShieldAlert },
   ]
 
   return (
@@ -143,7 +114,7 @@ export default function OverviewPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md">
-        {kpis.map((kpi, idx) => {
+        {kpiCards.map((kpi, idx) => {
           const Icon = kpi.icon
           return (
             <Card key={idx} className="p-md bg-surface-container-lowest border border-outline-variant hover:shadow-elevated transition-shadow flex flex-col justify-between">
@@ -162,26 +133,35 @@ export default function OverviewPage() {
         })}
       </div>
 
+      {/* ── Heatmap kepadatan QRIS ── */}
+      <DashboardHeatmapCard points={heatmap} />
+
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-md">
-        {/* Recent Activity */}
+        {/* Recent Disputes (aktivitas admin real belum ada tabel audit) */}
         <Card className="lg:col-span-2 p-md bg-surface-container-lowest border border-outline-variant">
-          <h2 className="text-headline-md text-on-surface font-semibold mb-md">Aktivitas Admin Terbaru</h2>
-          <div className="space-y-sm">
-            {auditLogs.slice(0, 5).map((log) => (
-              <div key={log.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-md bg-surface-container rounded-md hover:bg-surface-container-high transition-colors gap-xs">
-                <div className="flex-1">
-                  <p className="text-body-sm font-bold text-on-surface">{getActionLabel(log.actionType)}</p>
-                  <p className="text-label-xs text-on-surface-variant">
-                    {getEntityLabel(log.entityType)} &bull; ID Objek: <span className="font-mono text-primary">{log.entityId}</span> &bull; IP: {log.ipAddress}
-                  </p>
+          <h2 className="text-headline-md text-on-surface font-semibold mb-md">Sengketa Terbaru</h2>
+          {disputes.length === 0 ? (
+            <p className="text-body-sm text-on-surface-variant py-md text-center">
+              Belum ada sengketa di platform.
+            </p>
+          ) : (
+            <div className="space-y-sm">
+              {disputes.slice(0, 5).map((d) => (
+                <div key={d.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-md bg-surface-container rounded-md hover:bg-surface-container-high transition-colors gap-xs">
+                  <div className="flex-1">
+                    <p className="text-body-sm font-bold text-on-surface">{d.reason}</p>
+                    <p className="text-label-xs text-on-surface-variant">
+                      Sengketa &bull; ID: <span className="font-mono text-primary">{d.id}</span>
+                    </p>
+                  </div>
+                  <span className="text-label-xs text-on-surface-variant shrink-0 bg-background px-2 py-0.5 rounded border border-outline-variant">
+                    {d.status}
+                  </span>
                 </div>
-                <span className="text-label-xs text-on-surface-variant shrink-0 bg-background px-2 py-0.5 rounded border border-outline-variant">
-                  {new Date(log.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </Card>
 
         {/* Holding Funds Card */}
@@ -190,14 +170,19 @@ export default function OverviewPage() {
             <h2 className="text-headline-md text-on-surface font-semibold mb-md">Dana Tertahan</h2>
             <p className="text-headline-lg text-primary font-bold mb-xs">Rp {(holdingFunds).toLocaleString('id-ID')}</p>
             <p className="text-body-sm text-on-surface-variant mb-md leading-relaxed">
-              Jumlah dana transaksi yang saat ini ditahan sementara (berlaku prinsip zero-holding-funds).
+              Jumlah dana dari pembayaran yang masih PENDING (belum settle ke vendor).
             </p>
           </div>
           <div>
             <div className="h-2.5 bg-surface-container rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-primary to-primary-container" style={{ width: '35%' }}></div>
+              <div
+                className="h-full bg-gradient-to-r from-primary to-primary-container"
+                style={{ width: `${totalGMV > 0 ? Math.min(100, (holdingFunds / totalGMV) * 100) : 0}%` }}
+              ></div>
             </div>
-            <p className="text-label-xs text-on-surface-variant mt-sm">35% dari total keseluruhan transaksi</p>
+            <p className="text-label-xs text-on-surface-variant mt-sm">
+              {totalGMV > 0 ? Math.round((holdingFunds / totalGMV) * 100) : 0}% dari total keseluruhan transaksi
+            </p>
           </div>
         </Card>
       </div>
@@ -207,20 +192,30 @@ export default function OverviewPage() {
         <h2 className="text-headline-md text-on-surface font-semibold mb-md">Ringkasan Status Mitra Vendor</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-md">
           <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
-            <p className="text-label-sm text-on-surface-variant mb-xs">Aktif</p>
-            <p className="text-headline-lg text-primary font-bold">{vendors.filter(v => v.status === 'ACTIVE').length}</p>
+            <p className="text-label-sm text-on-surface-variant mb-xs">Aktif (Terverifikasi)</p>
+            <p className="text-headline-lg text-primary font-bold">{activeVendors}</p>
           </div>
           <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
             <p className="text-label-sm text-on-surface-variant mb-xs">Ditangguhkan</p>
-            <p className="text-headline-lg text-error font-bold">{vendors.filter(v => v.status === 'SUSPENDED').length}</p>
+            <p className="text-headline-lg text-error font-bold">{suspendedVendors}</p>
           </div>
           <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
             <p className="text-label-sm text-on-surface-variant mb-xs">Menunggu KYB</p>
-            <p className="text-headline-lg text-tertiary font-bold">{vendors.filter(v => v.status === 'PENDING').length}</p>
+            <p className="text-headline-lg text-tertiary font-bold">{pendingKyb}</p>
           </div>
           <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
             <p className="text-label-sm text-on-surface-variant mb-xs">Total Terdaftar</p>
             <p className="text-headline-lg text-on-surface font-bold">{vendors.length}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-md mt-md">
+          <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
+            <p className="text-label-sm text-on-surface-variant mb-xs">Ditolak</p>
+            <p className="text-headline-lg text-error font-bold">{rejectedKyb}</p>
+          </div>
+          <div className="p-md bg-surface-container rounded-lg border border-outline-variant">
+            <p className="text-label-sm text-on-surface-variant mb-xs">Belum Kirim Dokumen</p>
+            <p className="text-headline-lg text-on-surface-variant font-bold">{unsubmittedKyb}</p>
           </div>
         </div>
       </Card>
